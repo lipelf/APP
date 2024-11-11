@@ -24,6 +24,8 @@ export default function Login() {
     }
   };
 
+  
+
   return (
     <>
       <Head>
@@ -61,9 +63,7 @@ export default function Login() {
                 />
               </div>
               <div className="form-group p-2">
-                <button className="btn btn-outline-success" type="submit">Login</button>
-                <Link className="btn btn-outline-info" href="/">Voltar</Link>
-              </div>
+                <button className="btn btn-outline-success" type="submit">Login</button>              </div>
             </div>
           </div>
         </form>
