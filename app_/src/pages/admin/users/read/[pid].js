@@ -11,15 +11,16 @@ export default function readuser() {
   const API_URL = "http://localhost:3001/api/users/"
 
   const [user, setUser] = useState({
-    author_id: "",
-    author_name: "",
-    author_email: "",
-    author_user: "",
-    author_pwd: "",
-    author_level: "",
-    author_status: "",
-    author_create_date: ""
+    id: "",
+    name: "",
+    email: "",
+    user: "",
+    pwd: "",
+    level: "",
+    status: ""
   });
+
+
 
   const router = useRouter();
   const [pid] = useState(router.query.pid);
@@ -84,23 +85,23 @@ export default function readuser() {
                 <form >
                 <div className="form-group">
                     <label className="form-label" htmlFor="author_name">Nome</label>
-                    <input type="text" id="author_name" name="author_name" className="form-control" value={user.author_name} readOnly/>
+                    <input type="text" id="author_name" name="author_name" className="form-control" value={user.name} readOnly/>
                 </div>
                 <div className="form-group">
                     <label className="form-label" htmlFor="author_email">E-mail</label>
-                    <input type="text" id="author_email" name="author_email" className="form-control" value={user.author_email} readOnly/>
+                    <input type="text" id="author_email" name="author_email" className="form-control" value={user.email} readOnly/>
                 </div>
                 <div className="form-group">
                     <label className="form-label" htmlFor="author_user">Usuário</label>
-                    <input type="text" id="author_user" name="author_user" className="form-control" value={user.author_user} readOnly/>
+                    <input type="text" id="author_user" name="author_user" className="form-control" value={user.user} readOnly/>
                 </div>
                 <div className="form-group">
                     <label className="form-label" htmlFor="author_pwd">Senha</label>
-                    <input type="password" id="author_pwd" name="author_pwd" className="form-control" value={user.author_pwd} readOnly/>
+                    <input type="password" id="author_pwd" name="author_pwd" className="form-control" value={user.pwd} readOnly/>
                 </div>
                 <div className="form-group">
                     <label className="form-label" htmlFor="author_level">Nível</label>
-                    <select className="form-select" id="author_level" name="author_level" value={user.author_level} readOnly>
+                    <select className="form-select" id="author_level" name="author_level" value={user.level} readOnly>
                       {optionsLevel.map(option => (
                         <option key={option.value} value={option.value}>
                           {option.text}
@@ -110,17 +111,13 @@ export default function readuser() {
                 </div>
                 <div className="form-group">
                     <label className="form-label" htmlFor="author_status">Status</label>
-                    <select className="form-select" id="author_status" name="author_status" value={user.author_status} readOnly>
+                    <select className="form-select" id="author_status" name="author_status" value={user.status} readOnly>
                       {optionsStatus.map(option => (
                         <option key={option.value} value={option.value}>
                           {option.text}
                         </option>
                       ))}
                     </select>
-                </div>
-                <div className="form-group">
-                    <label className="form-label" htmlFor="author_create_date">Data de Criação</label>
-                    <input type="text" id="author_create_date" name="author_create_date" className="form-control" value={ user.author_create_date } readOnly/>
                 </div>
                 <div className="form-group p-2">
                     {/* <button className="btn btn-outline-success" type="button" onClick={handleCreateUser} >Salvar</button> */}

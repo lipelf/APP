@@ -59,8 +59,8 @@ export default function users() {
         {users.map( user => (
             <tr key={user._id}>
               <th scope="row">{user._id}</th>
-              <td>{user.author_name}</td>
-              <td>{user.author_email}</td>
+              <td>{user.name}</td>
+              <td>{user.email}</td>
               <td>
                 <UserAction pid={ user._id }></UserAction>
               </td>
