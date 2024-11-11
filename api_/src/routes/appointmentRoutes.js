@@ -1,11 +1,21 @@
 const express = require('express');
 const router = express.Router();
-const fs = require('fs');
-const path = require('path');
-const { v4: uuidv4 } = require('uuid'); 
+const mongoose = require('mongoose');
+const { v4: uuidv4 } = require('uuid');
 
-const filePath = path.join(__dirname, '../data/appointments.json');
-let appointmentDB = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+/**
+ * Define o esquema e o modelo do agendamento
+ */
+const appointmentSchema = new mongoose.Schema({
+    id: { type: String, required: true },
+    specialty: { type: String, required: true },
+    comments: { type: String, required: true },
+    date: { type: Date, required: true },
+    student: { type: String, required: true },
+    professional: { type: String, required: true }
+});
+
+const Appointment = mongoose.model('Appointment', appointmentSchema);
 
 /**
  * @swagger
@@ -23,16 +33,14 @@ let appointmentDB = JSON.parse(fs.readFileSync(filePath, 'utf8'));
  *       200:
  *         description: Uma lista de agendamentos
  */
-router.get('/', (req, res) => {
-    const agendamentosOrdenados = appointmentDB.sort((a, b) => {
-        if (a.professional.toLowerCase() < b.professional.toLowerCase()) return -1;
-        if (a.professional.toLowerCase() > b.professional.toLowerCase()) return 1;
-        return 0;
-    });
-    res.json(agendamentosOrdenados);
-
+router.get('/', async (req, res) => {
+    try {
+        const appointments = await Appointment.find().sort({ professional: 1 });
+        res.json(appointments);
+    } catch (err) {
+        res.status(500).json({ erro: 'Erro ao buscar agendamentos' });
+    }
 });
-
 
 /**
  * @swagger
@@ -40,58 +48,18 @@ router.get('/', (req, res) => {
  *   get:
  *     tags: [Appointment]
  *     summary: Retorna um agendamento específico
- *     parameters:
- *       - name: id
- *         in: path
- *         description: ID do agendamento a ser retornado
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Agendamento encontrado
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 id:
- *                   type: string
- *                 specialty:
- *                   type: string
- *                 comments:
- *                   type: string
- *                 date:
- *                   type: string
- *                   format: date-time
- *                 student:
- *                   type: string
- *                 professional:
- *                   type: string
- *       404:
- *         description: Agendamento não encontrado
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 erro:
- *                   type: string
  */
-router.get('/:id', (req, res) => {
-    const id = req.params.id;
-
-    const agendamento = appointmentDB.find(appt => appt.id === id);
-
-    if (!agendamento) {
-        return res.status(404).json({
-            "erro": "Agendamento não encontrado"
-        });
+router.get('/:id', async (req, res) => {
+    try {
+        const appointment = await Appointment.findOne({ id: req.params.id });
+        if (!appointment) {
+            return res.status(404).json({ erro: 'Agendamento não encontrado' });
+        }
+        res.json(appointment);
+    } catch (err) {
+        res.status(500).json({ erro: 'Erro ao buscar o agendamento' });
     }
-
-    res.json(agendamento);
 });
-
 
 /**
  * @swagger
@@ -99,58 +67,29 @@ router.get('/:id', (req, res) => {
  *   post:
  *     tags: [Appointment]
  *     summary: Insere um novo agendamento
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               specialty:
- *                 type: string
- *               comments:
- *                 type: string
- *               date:
- *                 type: string
- *                 format: date-time
- *               student:
- *                 type: string
- *               professional:
- *                 type: string
- *     responses:
- *       200:
- *         description: Agendamento inserido com sucesso
- *       400:
- *         description: Erro na validação do agendamento
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 erro:
- *                   type: string
  */
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
+    const { specialty, comments, date, student, professional } = req.body;
 
-    const agendamento = req.body;
-
-    if (agendamento.id) {
-        return res.status(400).json({ "erro": "O campo 'id' não deve ser fornecido. Ele é gerado automaticamente." });
+    if (!specialty || !comments || !date || !student || !professional) {
+        return res.status(400).json({ erro: 'Todos os campos são obrigatórios' });
     }
 
-    agendamento.id = uuidv4();
+    const newAppointment = new Appointment({
+        id: uuidv4(),
+        specialty,
+        comments,
+        date,
+        student,
+        professional
+    });
 
-    if (!agendamento.specialty) return res.status(400).json({ "erro": "Agendamento precisa ter uma 'specialty'." });
-    if (!agendamento.comments) return res.status(400).json({ "erro": "Agendamento precisa ter 'comments'." });
-    if (!agendamento.date) return res.status(400).json({ "erro": "Agendamento precisa ter uma 'date' no formato 'YYYY-MM-DD HH:mm:ss'." });
-    if (!agendamento.student) return res.status(400).json({ "erro": "Agendamento precisa ter um 'student'." });
-    if (!agendamento.professional) return res.status(400).json({ "erro": "Agendamento precisa ter um 'professional'." });
-
-    appointmentDB.push(agendamento);
-
-    fs.writeFileSync(filePath, JSON.stringify(appointmentDB, null, 2), 'utf8');
-
-    return res.status(200).json({ "sucesso": "Agendamento cadastrado com sucesso", "id": agendamento.id });
+    try {
+        await newAppointment.save();
+        res.status(200).json({ sucesso: 'Agendamento cadastrado com sucesso', id: newAppointment.id });
+    } catch (err) {
+        res.status(500).json({ erro: 'Erro ao salvar o agendamento' });
+    }
 });
 
 /**
@@ -159,79 +98,25 @@ router.post('/', (req, res) => {
  *   put:
  *     tags: [Appointment]
  *     summary: Substitui um agendamento existente
- *     parameters:
- *       - name: id
- *         in: path
- *         description: ID do agendamento a ser substituído
- *         required: true
- *         schema:
- *           type: string
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               specialty:
- *                 type: string
- *               comments:
- *                 type: string
- *               date:
- *                 type: string
- *                 format: date-time
- *               student:
- *                 type: string
- *               professional:
- *                 type: string
- *     responses:
- *       200:
- *         description: Agendamento substituído com sucesso
- *       404:
- *         description: Agendamento não encontrado
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 erro:
- *                   type: string
- *       400:
- *         description: Erro na validação do agendamento
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 erro:
- *                   type: string
- *          
  */
-router.put('/:id', (req, res) => {
-    const id = req.params.id;
-    const novoAgendamento = req.body;
+router.put('/:id', async (req, res) => {
+    const { specialty, comments, date, student, professional } = req.body;
 
-    const agendamentoIndex = appointmentDB.findIndex(appt => appt.id === id);
+    try {
+        const updatedAppointment = await Appointment.findOneAndUpdate(
+            { id: req.params.id },
+            { specialty, comments, date, student, professional },
+            { new: true, runValidators: true }
+        );
 
-    if (novoAgendamento.id && novoAgendamento.id !== id) {
-        return res.status(400).json({ "erro": "Não é permitido alterar o ID do agendamento" });
+        if (!updatedAppointment) {
+            return res.status(404).json({ erro: 'Agendamento não encontrado' });
+        }
+
+        res.json(updatedAppointment);
+    } catch (err) {
+        res.status(400).json({ erro: 'Erro ao atualizar o agendamento' });
     }
-
-    if (agendamentoIndex === -1) {
-        return res.status(404).json({ "erro": "Agendamento não encontrado" });
-    }
-
-    if (!novoAgendamento.specialty) return res.status(400).json({ "erro": "Agendamento precisa ter uma 'specialty'." });
-    if (!novoAgendamento.comments) return res.status(400).json({ "erro": "Agendamento precisa ter 'comments'." });
-    if (!novoAgendamento.date) return res.status(400).json({ "erro": "Agendamento precisa ter uma 'date' no formato 'YYYY-MM-DD HH:mm:ss'." });
-    if (!novoAgendamento.student) return res.status(400).json({ "erro": "Agendamento precisa ter um 'student'." });
-    if (!novoAgendamento.professional) return res.status(400).json({ "erro": "Agendamento precisa ter um 'professional'." });
-
-    appointmentDB[agendamentoIndex] = { id, ...novoAgendamento };
-
-    fs.writeFileSync(filePath, JSON.stringify(appointmentDB, null, 2), 'utf8');
-
-    return res.json(appointmentDB[agendamentoIndex]);
 });
 
 /**
@@ -240,44 +125,19 @@ router.put('/:id', (req, res) => {
  *   delete:
  *     tags: [Appointment]
  *     summary: Deleta um agendamento existente
- *     parameters:
- *       - name: id
- *         in: path
- *         description: ID do agendamento a ser deletado
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Agendamento deletado com sucesso
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 mensagem:
- *                   type: string
- *       404:
- *         description: Agendamento não encontrado
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 erro:
- *                   type: string
  */
-router.delete('/:id', (req, res) => {
-    const id = req.params.id;
+router.delete('/:id', async (req, res) => {
+    try {
+        const deletedAppointment = await Appointment.findOneAndDelete({ id: req.params.id });
 
-    const appointmentIndex = appointmentDB.findIndex(appointment => appointment.id === id);
+        if (!deletedAppointment) {
+            return res.status(404).json({ erro: 'Agendamento não encontrado' });
+        }
 
-    if (appointmentIndex === -1) {
-        return res.status(404).json({ "erro": "Agendamento não encontrado" });
+        res.json({ mensagem: 'Agendamento deletado com sucesso.' });
+    } catch (err) {
+        res.status(500).json({ erro: 'Erro ao deletar o agendamento' });
     }
-
-    appointmentDB.splice(appointmentIndex, 1);
-    res.json({ "mensagem": "Agendamento deletado com sucesso." });
 });
 
 module.exports = router;

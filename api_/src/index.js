@@ -1,66 +1,40 @@
+// src/index.js
+
 const express = require('express');
-const usersRoutes = require('./routes/usersRoutes.js'); 
-const appointmentRoutes = require('./routes/appointmentRoutes.js'); 
-const studentsRoutes = require('./routes/studentsRoutes.js'); 
-const eventsRoutes = require('./routes/eventsRoutes.js'); 
-const teachersRoutes = require('./routes/teachersRoutes.js'); 
-const professionalsRoutes = require('./routes/professionalsRoutes.js'); 
-const swaggerUi = require('swagger-ui-express');
-const swaggerJsdoc = require('swagger-jsdoc');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const appointmentRoutes = require('./routes/appointmentRoutes');
+const eventsRoutes = require('./routes/eventsRoutes');
+const professionalsRoutes = require('./routes/professionalsRoutes');
+const studentsRoutes = require('./routes/studentsRoutes');
+const teachersRoutes = require('./routes/teachersRoutes');
+const usersRoutes = require('./routes/usersRoutes');
+
 const app = express();
+app.use(bodyParser.json());
 
-app.use(express.json());
+const cors = require('cors');
+app.use(cors());
 
-const swaggerOptions = {
-  definition: {
-    openapi: '3.0.0',
-    info: {
-      title: 'API Gestão de Ensino Especial',
-      version: '1.0.0',
-      description: 'API para gerenciar entidades de alunos, professores, usuários, profissionais, eventos e compromissos',
-    },
-    tags: [
-      {
-        name: 'Users',
-        description: 'Endpoints relacionados aos usuários, Andrei Meneghel'
-      },
-      {
-        name: 'Appointment',
-        description: 'Endpoints relacionados aos agendamentos, Gustavo Bratti'
-      },
-      {
-        name: 'Students',
-        description: 'Endpoints relacionados aos alunos, Luiz Fellipe Rocha'
-      },
-      {
-        name: 'Events',
-        description: 'Endpoints relacionados aos eventos, Luiz Fellipe Rocha'
-      },
-      {
-        name: 'Teachers',
-        description: 'Endpoints relacionados aos teachers, Gabriel Rocha'
-      },
-      {
-        name: 'Professionals',
-        description: 'Endpoints relacionados aos profissionais, Lucas Simão'
-      }
-    ],
-  },
-  apis: ['./routes/*.js'], 
-};
+// Conecte-se ao MongoDB
+const mongoURI = 'mongodb://localhost:27017/mydb'; // Altere para o URI do seu MongoDB
+mongoose.connect(mongoURI)
+  .then(() => {
+    console.log('Conectado ao MongoDB');
+  })
+  .catch((err) => {
+    console.error('Erro ao conectar ao MongoDB:', err);
+  });
 
-const swaggerDocs = swaggerJsdoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
-
-app.use('/users', usersRoutes);
-app.use('/appointment', appointmentRoutes);
+// Use as rotas
+app.use('/appointments', appointmentRoutes);
+app.use('/events', eventsRoutes);
+app.use('/professionals', professionalsRoutes);
 app.use('/students', studentsRoutes);
-app.use('/events', eventsRoutes); 
-app.use('/teachers', teachersRoutes); 
-app.use('/professionals', professionalsRoutes); 
+app.use('/teachers', teachersRoutes);
+app.use('/users', usersRoutes);
 
-const PORT = process.env.PORT || 3333;
-
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
+    console.log(`Servidor rodando na porta ${PORT}`);
 });
