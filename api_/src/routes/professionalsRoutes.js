@@ -1,59 +1,26 @@
 const express = require('express');
 const router = express.Router();
-const fs = require('fs');
-const path = require('path');
+const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid');
-const filePath = path.join(__dirname, '../data/professionals.json');
-let professionalDB = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+
+/**
+ * Define o esquema e o modelo do profissional
+ */
+const professionalSchema = new mongoose.Schema({
+    id: { type: String, required: true },
+    nome: { type: String, required: true },
+    especialidade: { type: String, required: true },
+    contact: { type: String, required: true },
+    status: { type: String, required: true }
+});
+
+const Professional = mongoose.model('Professional', professionalSchema);
 
 /**
  * @swagger
  * tags:
  *   name: Professionals
- *   description: Endpoints relacionados aos profissionais. 
- */
-
-/**
- * @swagger
- * components:
- *   schemas:
- *     Professional:
- *       type: object
- *       properties:
- *         id:
- *           type: string
- *         nome:
- *           type: string
- *         especialidade:
- *           type: string
- *         contact:
- *           type: string
- *         status:
- *           type: string
- * 
- *     ProfessionalCreate:
- *       type: object
- *       properties:
- *         nome:
- *           type: string
- *         especialidade:
- *           type: string
- *         contact:
- *           type: string
- *         status:
- *           type: string
- * 
- *     ProfessionalUpdate:
- *       type: object
- *       properties:
- *         nome:
- *           type: string
- *         especialidade:
- *           type: string
- *         contact:
- *           type: string
- *         status:
- *           type: string
+ *   description: Endpoints relacionados aos profissionais.
  */
 
 /**
@@ -70,29 +37,15 @@ let professionalDB = JSON.parse(fs.readFileSync(filePath, 'utf8'));
  *             schema:
  *               type: array
  *               items:
- *                 type: object
- *                 properties:
- *                   id:
- *                     type: string
- *                   nome:
- *                     type: string
- *                   especialidade:
- *                     type: string
- *                   contact:
- *                     type: string
- *                   status:
- *                     type: string
+ *                 $ref: '#/components/schemas/Professional'
  */
-router.get('/', (req, res) => {
-    const profissionaisOrdenados = professionalDB
-        .filter(profissional => profissional.nome) // Filtra profissionais sem nome
-        .sort((a, b) => {
-            if (a.nome && b.nome) {
-                return a.nome.toLowerCase().localeCompare(b.nome.toLowerCase());
-            }
-            return 0;
-        });
-    res.json(profissionaisOrdenados);
+router.get('/', async (req, res) => {
+    try {
+        const professionals = await Professional.find().sort({ nome: 1 });
+        res.json(professionals);
+    } catch (err) {
+        res.status(500).json({ erro: 'Erro ao buscar profissionais' });
+    }
 });
 
 /**
@@ -101,39 +54,17 @@ router.get('/', (req, res) => {
  *   get:
  *     tags: [Professionals]
  *     summary: Retorna um profissional específico
- *     parameters:
- *       - name: id
- *         in: path
- *         description: ID do profissional a ser retornado
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Profissional encontrado
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 id:
- *                   type: string
- *                 nome:
- *                   type: string
- *                 especialidade:
- *                   type: string
- *                 contact:
- *                   type: string
- *                 status:
- *                   type: string
- *       404:
- *         description: Profissional não encontrado
  */
-router.get('/:id', (req, res) => {
-    const id = req.params.id;
-    const profissional = professionalDB.find(profissional => profissional.id === id);
-    if (!profissional) return res.status(404).json({ "erro": "Profissional não encontrado" });
-    res.json(profissional);
+router.get('/:id', async (req, res) => {
+    try {
+        const professional = await Professional.findOne({ id: req.params.id });
+        if (!professional) {
+            return res.status(404).json({ erro: 'Profissional não encontrado' });
+        }
+        res.json(professional);
+    } catch (err) {
+        res.status(500).json({ erro: 'Erro ao buscar o profissional' });
+    }
 });
 
 /**
@@ -142,38 +73,28 @@ router.get('/:id', (req, res) => {
  *   post:
  *     tags: [Professionals]
  *     summary: Insere um novo profissional
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               nome:
- *                 type: string
- *               especialidade:
- *                 type: string
- *               contact:
- *                 type: string
- *               status:
- *                 type: string
- *     responses:
- *       200:
- *         description: Profissional inserido com sucesso
- *       400:
- *         description: Erro na validação do profissional
  */
-router.post('/', (req, res) => {
-    const profissional = req.body;
-    profissional.id = uuidv4();
+router.post('/', async (req, res) => {
+    const { nome, especialidade, contact, status } = req.body;
 
-    if (!profissional.nome || !profissional.especialidade || !profissional.contact || !profissional.status) {
-        return res.status(400).json({ "erro": "Profissional precisa ter os seguintes campos: nome, especialidade, contact e status" });
+    if (!nome || !especialidade || !contact || !status) {
+        return res.status(400).json({ erro: 'Todos os campos são obrigatórios' });
     }
 
-    professionalDB.push(profissional);
-    fs.writeFileSync(filePath, JSON.stringify(professionalDB, null, 2), 'utf8');
-    return res.json({ "sucesso": "Profissional cadastrado com sucesso", "id": profissional.id });
+    const newProfessional = new Professional({
+        id: uuidv4(),
+        nome,
+        especialidade,
+        contact,
+        status
+    });
+
+    try {
+        await newProfessional.save();
+        res.status(200).json({ sucesso: 'Profissional cadastrado com sucesso', id: newProfessional.id });
+    } catch (err) {
+        res.status(500).json({ erro: 'Erro ao salvar o profissional' });
+    }
 });
 
 /**
@@ -182,50 +103,25 @@ router.post('/', (req, res) => {
  *   put:
  *     tags: [Professionals]
  *     summary: Atualiza um profissional existente
- *     parameters:
- *       - name: id
- *         in: path
- *         description: ID do profissional a ser atualizado
- *         required: true
- *         schema:
- *           type: string
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               nome:
- *                 type: string
- *               especialidade:
- *                 type: string
- *               contact:
- *                 type: string
- *               status:
- *                 type: string
- *     responses:
- *       200:
- *         description: Profissional atualizado com sucesso
- *       404:
- *         description: Profissional não encontrado
- *       400:
- *         description: Erro na validação do profissional
  */
-router.put('/:id', (req, res) => {
-    const id = req.params.id;
-    const profissionalAtualizado = req.body;
-    const indiceProfissional = professionalDB.findIndex(profissional => profissional.id === id);
+router.put('/:id', async (req, res) => {
+    const { nome, especialidade, contact, status } = req.body;
 
-    if (indiceProfissional === -1) return res.status(404).json({ "erro": "Profissional não encontrado" });
+    try {
+        const updatedProfessional = await Professional.findOneAndUpdate(
+            { id: req.params.id },
+            { nome, especialidade, contact, status },
+            { new: true, runValidators: true }
+        );
 
-    if (!profissionalAtualizado.nome || !profissionalAtualizado.especialidade || !profissionalAtualizado.contact || !profissionalAtualizado.status) {
-        return res.status(400).json({ "erro": "Profissional precisa ter os seguintes campos: nome, especialidade, contact e status" });
+        if (!updatedProfessional) {
+            return res.status(404).json({ erro: 'Profissional não encontrado' });
+        }
+
+        res.json(updatedProfessional);
+    } catch (err) {
+        res.status(400).json({ erro: 'Erro ao atualizar o profissional' });
     }
-
-    professionalDB[indiceProfissional] = { id, ...profissionalAtualizado };
-    fs.writeFileSync(filePath, JSON.stringify(professionalDB, null, 2), 'utf8');
-    res.json(profissionalAtualizado);
 });
 
 /**
@@ -234,28 +130,19 @@ router.put('/:id', (req, res) => {
  *   delete:
  *     tags: [Professionals]
  *     summary: Deleta um profissional existente
- *     parameters:
- *       - name: id
- *         in: path
- *         description: ID do profissional a ser deletado
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Profissional deletado com sucesso
- *       404:
- *         description: Profissional não encontrado
  */
-router.delete('/:id', (req, res) => {
-    const id = req.params.id;
-    const indiceProfissional = professionalDB.findIndex(profissional => profissional.id === id);
+router.delete('/:id', async (req, res) => {
+    try {
+        const deletedProfessional = await Professional.findOneAndDelete({ id: req.params.id });
 
-    if (indiceProfissional === -1) return res.status(404).json({ "erro": "Profissional não encontrado" });
+        if (!deletedProfessional) {
+            return res.status(404).json({ erro: 'Profissional não encontrado' });
+        }
 
-    professionalDB.splice(indiceProfissional, 1);
-    fs.writeFileSync(filePath, JSON.stringify(professionalDB, null, 2), 'utf8');
-    res.json({ "mensagem": "Profissional deletado com sucesso." });
+        res.json({ mensagem: 'Profissional deletado com sucesso.' });
+    } catch (err) {
+        res.status(500).json({ erro: 'Erro ao deletar o profissional' });
+    }
 });
 
 module.exports = router;

@@ -1,65 +1,27 @@
 const express = require('express');
 const router = express.Router();
-const fs = require('fs');
-const path = require('path');
+const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid');
-const filePath = path.join(__dirname, '../data/teachers.json');
-let teachersDB = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+
+/**
+ * Define o esquema e o modelo do professor
+ */
+const teachersSchema = new mongoose.Schema({
+    id: { type: String, required: true },
+    name: { type: String, required: true },
+    school_disciplines: { type: String, required: true },
+    contact: { type: String, required: true },
+    phone_number: { type: String, required: true },
+    status: { type: String, required: true }
+});
+
+const Teacher = mongoose.model('Teachers', teachersSchema);
 
 /**
  * @swagger
  * tags:
  *   name: Teachers
- *   description: Gerenciamento de professores. 
- */
-
-/**
- * @swagger
- * components:
- *   schemas:
- *     Teacher:
- *       type: object
- *       properties:
- *         id:
- *           type: string
- *         name:
- *           type: string
- *         subject:
- *           type: string
- *         email:
- *           type: string
- *         phone:
- *           type: string
- *         status:
- *           type: string
- * 
- *     TeacherCreate:
- *       type: object
- *       properties:
- *         name:
- *           type: string
- *         subject:
- *           type: string
- *         email:
- *           type: string
- *         phone:
- *           type: string
- *         status:
- *           type: string
- * 
- *     TeacherUpdate:
- *       type: object
- *       properties:
- *         name:
- *           type: string
- *         subject:
- *           type: string
- *         email:
- *           type: string
- *         phone:
- *           type: string
- *         status:
- *           type: string
+ *   description: Endpoints relacionados aos professores.
  */
 
 /**
@@ -72,14 +34,13 @@ let teachersDB = JSON.parse(fs.readFileSync(filePath, 'utf8'));
  *       200:
  *         description: Uma lista de professores
  */
-router.get('/', (req, res) => {
-    const sortedTeachers = teachersDB.sort((a, b) => {
-        if (a.name.toLowerCase() < b.name.toLowerCase()) return -1;
-        if (a.name.toLowerCase() > b.name.toLowerCase()) return 1;
-        return 0;
-    });
-
-    res.json(sortedTeachers);
+router.get('/', async (req, res) => {
+    try {
+        const teachers = await Teacher.find().sort({ name: 1 });
+        res.json(teachers);
+    } catch (err) {
+        res.status(500).json({ erro: 'Erro ao buscar professores' });
+    }
 });
 
 /**
@@ -88,29 +49,17 @@ router.get('/', (req, res) => {
  *   get:
  *     tags: [Teachers]
  *     summary: Retorna um professor específico
- *     parameters:
- *       - name: id
- *         in: path
- *         description: ID do professor
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Professor encontrado
- *       404:
- *         description: Professor não encontrado
  */
-router.get('/:id', (req, res) => {
-    const id = req.params.id;
-
-    const teacher = teachersDB.find(teacher => teacher.id === id);
-
-    if (!teacher) return res.status(404).json({
-        "erro": "Professor não encontrado"
-    });
-
-    res.json(teacher);
+router.get('/:id', async (req, res) => {
+    try {
+        const teacher = await Teacher.findOne({ id: req.params.id });
+        if (!teacher) {
+            return res.status(404).json({ erro: 'Professor não encontrado' });
+        }
+        res.json(teacher);
+    } catch (err) {
+        res.status(500).json({ erro: 'Erro ao buscar o professor' });
+    }
 });
 
 /**
@@ -119,51 +68,29 @@ router.get('/:id', (req, res) => {
  *   post:
  *     tags: [Teachers]
  *     summary: Insere um novo professor
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               name:
- *                 type: string
- *               school_disciplines:
- *                 type: string
- *               contact:
- *                 type: string
- *               phone_number:
- *                 type: string
- *               status:
- *                 type: string
- *     responses:
- *       200:
- *         description: Professor inserido com sucesso
- *       400:
- *         description: Erro na validação do professor
  */
-router.post('/', (req, res) => {
-    const novoProfessor = req.body;
-    novoProfessor.id = uuidv4();
+router.post('/', async (req, res) => {
+    const { name, school_disciplines, contact, phone_number, status } = req.body;
 
-    if (!novoProfessor.name) return res.status(400).json({ "erro": "Professor precisa ter um 'name'" });
-    if (!novoProfessor.school_disciplines) return res.status(400).json({ "erro": "Professor precisa ter um 'school_disciplines'" });
-    if (!novoProfessor.contact) return res.status(400).json({ "erro": "Professor precisa ter um 'contact'" });
-    if (!novoProfessor.phone_number) return res.status(400).json({ "erro": "Professor precisa ter um 'phone_number'" });
-    if (!novoProfessor.status) return res.status(400).json({ "erro": "Professor precisa ter um 'status'" });
+    if (!name || !school_disciplines || !contact || !phone_number || !status) {
+        return res.status(400).json({ erro: 'Todos os campos são obrigatórios' });
+    }
 
-    const teacherFormatted = {
-        id: novoProfessor.id,
-        name: novoProfessor.name,
-        school_disciplines: novoProfessor.school_disciplines,
-        contact: novoProfessor.contact,
-        phone_number: novoProfessor.phone_number,
-        status: novoProfessor.status
-    };
+    const newTeacher = new Teacher({
+        id: uuidv4(),
+        name,
+        school_disciplines,
+        contact,
+        phone_number,
+        status
+    });
 
-    teachersDB.push(teacherFormatted);
-    fs.writeFileSync(filePath, JSON.stringify(teachersDB, null, 2), 'utf8');  
-    return res.json({ "sucesso": "Professor cadastrado com sucesso", "id": novoProfessor.id });
+    try {
+        await newTeacher.save();
+        res.status(200).json({ sucesso: 'Professor cadastrado com sucesso', id: newTeacher.id });
+    } catch (err) {
+        res.status(500).json({ erro: 'Erro ao salvar o professor' });
+    }
 });
 
 /**
@@ -172,59 +99,25 @@ router.post('/', (req, res) => {
  *   put:
  *     tags: [Teachers]
  *     summary: Substitui um professor existente
- *     parameters:
- *       - name: id
- *         in: path
- *         description: ID do professor
- *         required: true
- *         schema:
- *           type: string
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               id:
- *                 type: string
- *               name:
- *                 type: string
- *               school_disciplines:
- *                 type: string
- *               contact:
- *                 type: string
- *               phone_number:
- *                 type: string
- *               status:
- *                 type: string
- *     responses:
- *       200:
- *         description: Professor substituído com sucesso
- *       404:
- *         description: Professor não encontrado
- *       400:
- *         description: Erro na validação do professor
  */
-router.put('/:id', (req, res) => {
-    const id = req.params.id;
-    const novoProfessor = req.body;
+router.put('/:id', async (req, res) => {
+    const { name, school_disciplines, contact, phone_number, status } = req.body;
 
-    const teachersIndex = teachersDB.findIndex(teacher => teacher.id === id);
+    try {
+        const updatedTeacher = await Teacher.findOneAndUpdate(
+            { id: req.params.id },
+            { name, school_disciplines, contact, phone_number, status },
+            { new: true, runValidators: true }
+        );
 
-    if (teachersIndex === -1) {
-        return res.status(404).json({ "erro": "Professor não encontrado" });
+        if (!updatedTeacher) {
+            return res.status(404).json({ erro: 'Professor não encontrado' });
+        }
+
+        res.json(updatedTeacher);
+    } catch (err) {
+        res.status(400).json({ erro: 'Erro ao atualizar o professor' });
     }
-
-    if (!novoProfessor.id) return res.status(400).json({ "erro": "Professor precisa ter um 'id'" });
-    if (!novoProfessor.name) return res.status(400).json({ "erro": "Professor precisa ter um 'name'" });
-    if (!novoProfessor.school_disciplines) return res.status(400).json({ "erro": "Professor precisa ter um 'school_disciplines'" });
-    if (!novoProfessor.contact) return res.status(400).json({ "erro": "Professor precisa ter um 'contact'" });
-    if (!novoProfessor.phone_number) return res.status(400).json({ "erro": "Professor precisa ter um 'phone_number'" });
-    if (!novoProfessor.status) return res.status(400).json({ "erro": "Professor precisa ter um 'status'" });
-
-    teachersDB[teachersIndex] = novoProfessor;
-    res.json(novoProfessor);
 });
 
 /**
@@ -233,28 +126,19 @@ router.put('/:id', (req, res) => {
  *   delete:
  *     tags: [Teachers]
  *     summary: Deleta um professor existente
- *     parameters:
- *       - name: id
- *         in: path
- *         description: ID do professor
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Professor deletado com sucesso
- *       404:
- *         description: Professor não encontrado
  */
-router.delete('/:id', (req, res) => {
-    const id = req.params.id;
+router.delete('/:id', async (req, res) => {
+    try {
+        const deletedTeacher = await Teacher.findOneAndDelete({ id: req.params.id });
 
-    const teachersIndex = teachersDB.findIndex(teacher => teacher.id === id);
+        if (!deletedTeacher) {
+            return res.status(404).json({ erro: 'Professor não encontrado' });
+        }
 
-    if (teachersIndex === -1) return res.status(404).json({ "erro": "Professor não encontrado" });
-
-    teachersDB.splice(teachersIndex, 1);
-    res.json({ "mensagem": "Professor deletado com sucesso." });
+        res.json({ mensagem: 'Professor deletado com sucesso.' });
+    } catch (err) {
+        res.status(500).json({ erro: 'Erro ao deletar o professor' });
+    }
 });
 
 module.exports = router;
