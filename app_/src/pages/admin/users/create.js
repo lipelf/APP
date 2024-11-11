@@ -7,7 +7,7 @@ import Axios from 'axios';
 
 export default function createuser() {
   
-  const API_URL = "http://localhost:8080/api/users"
+  const API_URL = "http://localhost:3001/api/users"
 
   const [user, setUser] = useState({
     // author_id: "",

@@ -9,7 +9,7 @@ import MenuUsers from '@/components/MenuUsers'
 
 export default function users() {
 
-  const API_URL = "http://localhost:8080/api/users"
+  const API_URL = "http://localhost:3001/api/users"
   
   const [users, setUsers] = useState([]); 
   

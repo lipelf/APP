@@ -6,10 +6,10 @@ const teachersRoutes = require('./teachersRoutes')
 const appointmentRoutes = require('./appointmentRoutes')
 
 router.use(express.json())
-router.use('/users', usersRoutes)
-router.use('/appointment', appointmentRoutes)
-router.use('/students', studentsRoutes)
-router.use('/teachers', teachersRoutes)
+router.use('/api/users', usersRoutes)
+router.use('/api/appointment', appointmentRoutes)
+router.use('/api/students', studentsRoutes)
+router.use('/api/teachers', teachersRoutes)
 
 
 module.exports = router

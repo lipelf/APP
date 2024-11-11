@@ -27,12 +27,12 @@ mongoose.connect(mongoURI)
   });
 
 // Use as rotas
-app.use('/appointments', appointmentRoutes);
-app.use('/events', eventsRoutes);
-app.use('/professionals', professionalsRoutes);
-app.use('/students', studentsRoutes);
-app.use('/teachers', teachersRoutes);
-app.use('/users', usersRoutes);
+app.use('/api/appointments', appointmentRoutes);
+app.use('/api/events', eventsRoutes);
+app.use('/api/professionals', professionalsRoutes);
+app.use('/api/students', studentsRoutes);
+app.use('/api/teachers', teachersRoutes);
+app.use('/api/users', usersRoutes);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

@@ -17,12 +17,19 @@ export default function Login() {
       password,
     });
 
-    if (result.ok) {
+    console.log(result);
+  
+    console.log("SignIn Result:", result);
+  
+    if (result && result.ok) {
       router.push('/admin');
     } else {
       alert('Login failed');
+      console.error("Error during login:", result?.error || "Unknown error");
     }
   };
+  
+  
 
   
 
