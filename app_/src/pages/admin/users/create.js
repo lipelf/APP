@@ -1,38 +1,35 @@
-import NavAdmin from '@/components/NavAdmin'
+import NavAdmin from '@/components/NavAdmin';
 import MenuUsers from '@/components/MenuUsers';
-import Head from 'next/head'
-import Link from 'next/link'
+import Head from 'next/head';
+import Link from 'next/link';
 import { useState } from 'react';
 import Axios from 'axios';
 
-export default function createuser() {
-  
-  const API_URL = "http://localhost:3001/api/users"
+export default function CreateUser() {
+  const API_URL = "http://localhost:3001/api/users";
 
   const [user, setUser] = useState({
-    // author_id: "",
     author_name: "",
     author_email: "",
     author_user: "",
     author_pwd: "",
     author_level: "",
     author_status: "",
-    // author_create_date: ""
   });
 
-  const [message, setMensage] = useState({ message:"", status:""});
+  const [message, setMessage] = useState({ message: "", status: "" });
 
   const optionsLevel = [
-    {value: '', text: '-- Selecione um nível de acesso --'},
-    {value: 'admin', text: 'Administrador'},
-    {value: 'user', text: 'Usuário'},
-    {value: 'reader', text: 'Leitor'},
+    { value: '', text: '-- Selecione um nível de acesso --' },
+    { value: 'admin', text: 'Administrador' },
+    { value: 'user', text: 'Usuário' },
+    { value: 'reader', text: 'Leitor' },
   ];
 
   const optionsStatus = [
-    {value: '', text: '-- Selecione um estado --'},
-    {value: 'true', text: 'Ativo'},
-    {value: 'false', text: 'Inativo'},
+    { value: '', text: '-- Selecione um estado --' },
+    { value: 'true', text: 'Ativo' },
+    { value: 'false', text: 'Inativo' },
   ];
 
   const handleChange = (event) => {
@@ -45,11 +42,11 @@ export default function createuser() {
 
   const handleCreateUser = async () => {
     try {
-      const response = await Axios.post(API_URL, { user });
-      setMensage( { message: response.data.message , status: "ok"} );      
+      const response = await Axios.post(API_URL, user);
+      setMessage({ message: response.data.message, status: "ok" });
     } catch (error) {
       console.error('Erro ao criar o Usuário:', error);
-      setMensage( { message: "Erro ao criar o Usuário!", status: "error"} );
+      setMessage({ message: "Erro ao criar o Usuário!", status: "error" });
     }
   };
 
@@ -64,8 +61,8 @@ export default function createuser() {
         <NavAdmin />
         <MenuUsers />
         { 
-          message.status==="" ? "" : 
-          message.status==="ok" ? <div className='alert alert-success' role='alert'> { message.message } <Link className='alert-link' href='/admin/users'>Voltar</Link></div> : 
+          message.status === "" ? "" : 
+          message.status === "ok" ? <div className='alert alert-success' role='alert'> { message.message } <Link className='alert-link' href='/admin/users'>Voltar</Link></div> : 
           <div className='alert alert-danger' role='alert'> { message.message } <Link className='alert-link' href='/admin/users'>Voltar</Link></div>
         }
       </div>
@@ -111,7 +108,6 @@ export default function createuser() {
                         </option>
                       ))}
                     </select>
-
                 </div>
                 <div className="form-group p-2">
                     <button className="btn btn-outline-success" type="button" onClick={handleCreateUser} >Salvar</button>
@@ -124,5 +120,3 @@ export default function createuser() {
   </>
   )
 }
-
-

@@ -1,14 +1,13 @@
-import NavAdmin from '@/components/NavAdmin'
+import NavAdmin from '@/components/NavAdmin';
 import MenuUsers from '@/components/MenuUsers';
-import Head from 'next/head'
-import Link from 'next/link'
+import Head from 'next/head';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Axios from 'axios';
 import { useRouter } from 'next/router';
 
-export default function updateuser() {
-  
-  const API_URL = "http://localhost:3001/api/users/"
+export default function UpdateUser() {
+  const API_URL = "http://localhost:3001/api/users/";
 
   const [user, setUser] = useState({
     author_id: "",
@@ -22,59 +21,57 @@ export default function updateuser() {
   });
 
   const router = useRouter();
-  const [pid] = useState(router.query.pid);
+  const { pid } = router.query;
 
-  const [message, setMensage] = useState({ message:"", status:""});
+  const [message, setMessage] = useState({ message: "", status: "" });
 
   const optionsLevel = [
-    {value: '', text: '-- Selecione um nível de acesso --'},
-    {value: 'admin', text: 'Administrador'},
-    {value: 'user', text: 'Usuário'},
-    {value: 'reader', text: 'Leitor'},
+    { value: '', text: '-- Selecione um nível de acesso --' },
+    { value: 'admin', text: 'Administrador' },
+    { value: 'user', text: 'Usuário' },
+    { value: 'reader', text: 'Leitor' },
   ];
 
   const optionsStatus = [
-    {value: '', text: '-- Selecione um estado --'},
-    {value: 'true', text: 'Ativo'},
-    {value: 'false', text: 'Inativo'},
+    { value: '', text: '-- Selecione um estado --' },
+    { value: 'true', text: 'Ativo' },
+    { value: 'false', text: 'Inativo' },
   ];
 
-
-     useEffect(() => {
-        const getUser = async () => {
-          try {
-            const response = await Axios.get(API_URL + pid);
-            setMensage( { message: response.data.message , status: "ok"} ); 
-            setUser( response.data.foundedUser );
-          } catch (error) {
-            console.error('Erro ao buscar os usuários:', error);
-            setMensage( { message: "Erro ao buscar os Usuários!", status: "error"} );
-          }
-        };
-    
-        getUser();
-    
-      }, []);
-      
-      const handleChange = (event) => {
-        const { name, value } = event.target;
-        setUser({
-          ...user,
-          [name]: value
-        });
-      };
-
-      const handleUpdateUser = async () => {
+  useEffect(() => {
+    if (pid) {
+      const getUser = async () => {
         try {
-          const response = await Axios.put(API_URL + pid, { user });
-          setMensage( { message: response.data.message , status: "ok"} );      
+          const response = await Axios.get(`${API_URL}${pid}`);
+          setMessage({ message: response.data.message, status: "ok" });
+          setUser(response.data);
         } catch (error) {
-          console.error('Erro ao alterar o Usuário:', error);
-          setMensage( { message: "Erro ao alterar o Usuário!", status: "error"} );
+          console.error('Erro ao buscar o usuário:', error);
+          setMessage({ message: "Erro ao buscar o usuário!", status: "error" });
         }
       };
 
+      getUser();
+    }
+  }, [pid]);
 
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setUser({
+      ...user,
+      [name]: value
+    });
+  };
+
+  const handleUpdateUser = async () => {
+    try {
+      const response = await Axios.put(`${API_URL}${pid}`, { user });
+      setMessage({ message: response.data.message, status: "ok" });
+    } catch (error) {
+      console.error('Erro ao alterar o usuário:', error);
+      setMessage({ message: "Erro ao alterar o usuário!", status: "error" });
+    }
+  };
 
   return (
     <>
@@ -87,8 +84,8 @@ export default function updateuser() {
         <NavAdmin />
         <MenuUsers />
         { 
-          message.status==="" ? "" : 
-          message.status==="ok" ? <div className='alert alert-success' role='alert'> { message.message } <Link className='alert-link' href='/admin/users'>Voltar</Link></div> : 
+          message.status === "" ? "" : 
+          message.status === "ok" ? <div className='alert alert-success' role='alert'> { message.message } <Link className='alert-link' href='/admin/users'>Voltar</Link></div> : 
           <div className='alert alert-danger' role='alert'> { message.message } <Link className='alert-link' href='/admin/users'>Voltar</Link></div>
         }
       </div>
@@ -150,5 +147,3 @@ export default function updateuser() {
   </>
   )
 }
-
-
