@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import Axios from 'axios';
 import { useRouter } from 'next/router';
 
+
 export default function ReadUser() {
   const API_URL = "http://localhost:3001/api/users/";
 
@@ -18,6 +19,7 @@ export default function ReadUser() {
     level: "",
     status: ""
   });
+
 
   const router = useRouter();
   const { pid } = router.query;
@@ -32,9 +34,8 @@ export default function ReadUser() {
   ];
 
   const optionsStatus = [
-    { value: '', text: '-- Selecione um estado --' },
-    { value: 'true', text: 'Ativo' },
-    { value: 'false', text: 'Inativo' },
+    { value: 'on', text: 'Ativo' },
+    { value: 'off', text: 'Inativo' },
   ];
 
   useEffect(() => {

@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid');
+const bcrypt = require('bcryptjs');
+
 
 /**
  * Define o esquema e o modelo do usuário
@@ -53,9 +55,9 @@ router.get('/', async (req, res) => {
  */
 router.get('/:id', async (req, res) => {
     try {
-        const user = await User.findById(req.params.id);
+        const user = await User.findById(req.params.id); // Usando o _id do MongoDB
         if (!user) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(404).json({ error: 'Usuário não encontrado' });
         }
         res.status(200).json(user);
     } catch (error) {
@@ -77,12 +79,16 @@ router.post('/', async (req, res) => {
         return res.status(400).json({ erro: 'Todos os campos são obrigatórios' });
     }
 
+    // Criptografando a senha antes de salvar no banco
+    const salt = await bcrypt.genSalt(10);  // Gera o "sal" para a senha
+    const hashedPwd = await bcrypt.hash(pwd, salt);  // Criptografa a senha
+
     const newUser = new User({
         id: uuidv4(),
         name,
         email,
         user,
-        pwd,
+        pwd: hashedPwd,  // Salva a senha criptografada
         level,
         status
     });
@@ -106,10 +112,20 @@ router.put('/:id', async (req, res) => {
     const { name, email, user, pwd, level, status } = req.body;
 
     try {
-        const updatedUser = await User.findOneAndUpdate(
-            { id: req.params.id },
-            { name, email, user, pwd, level, status },
-            { new: true, runValidators: true }
+        // Verifica se a senha foi fornecida no corpo da requisição
+        const updateData = { name, email, user, level, status };
+
+        // Se a senha foi fornecida, criptografa antes de salvar
+        if (pwd) {
+            const salt = await bcrypt.genSalt(10);  // Gera o "sal" para a senha
+            updateData.pwd = await bcrypt.hash(pwd, salt);  // Criptografa a senha
+        }
+
+        // Atualiza o usuário no banco de dados
+        const updatedUser = await User.findByIdAndUpdate(
+            req.params.id, // Aqui está o _id da URL
+            updateData,     // Dados de atualização (incluindo a senha criptografada, se fornecida)
+            { new: true, runValidators: true }  // Retorna o novo documento e valida os campos
         );
 
         if (!updatedUser) {
@@ -131,7 +147,8 @@ router.put('/:id', async (req, res) => {
  */
 router.delete('/:id', async (req, res) => {
     try {
-        const deletedUser = await User.findOneAndDelete({ id: req.params.id });
+        // A alteração aqui é que estamos agora buscando pelo campo "_id" do MongoDB, não o "id" customizado
+        const deletedUser = await User.findByIdAndDelete(req.params.id);
 
         if (!deletedUser) {
             return res.status(404).json({ erro: 'Usuário não encontrado' });
