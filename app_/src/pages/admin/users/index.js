@@ -48,7 +48,7 @@ export default function users() {
         <table className="table table-hover table-dark">
         <thead>
             <tr>
-            <th scope="col">#</th>
+            <th scope="col">ID</th>
             <th scope="col">Nome</th>
             <th scope="col">E-mail</th>
             <th scope="col">Ação</th>
