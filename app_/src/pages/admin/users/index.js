@@ -45,7 +45,7 @@ export default function users() {
         <div className="row border-bottom">
         <h3> Lista de Usuários </h3>
         
-        <table className="table table-hover">
+        <table className="table table-hover table-dark">
         <thead>
             <tr>
             <th scope="col">#</th>

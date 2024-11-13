@@ -28,10 +28,6 @@ export default function Login() {
       console.error("Error during login:", result?.error || "Unknown error");
     }
   };
-  
-  
-
-  
 
   return (
     <>
@@ -70,7 +66,8 @@ export default function Login() {
                 />
               </div>
               <div className="form-group p-2">
-                <button className="btn btn-outline-success" type="submit">Login</button>              </div>
+                <button className="btn btn-outline-success" type="submit">Login</button>
+              </div>
             </div>
           </div>
         </form>

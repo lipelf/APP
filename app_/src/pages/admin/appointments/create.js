@@ -11,7 +11,6 @@ export default function CreateAppointments() {
   const [appointment, setAppointment] = useState({
     specialty: "",
     comments: "",
-    date: "",
     student: "",
     professional: "",
   });
@@ -27,8 +26,13 @@ export default function CreateAppointments() {
   };
 
   const handleCreateAppointments = async () => {
+    const appointmentWithDate = {
+      ...appointment,
+      date: new Date().toISOString() // Define a data atual no formato ISO 8601
+    };
+
     try {
-      const response = await Axios.post(API_URL, appointment);
+      const response = await Axios.post(API_URL, appointmentWithDate);
       setMessage({ message: response.data.message, status: "ok" });
     } catch (error) {
       console.error('Erro ao criar Appointment:', error);
@@ -67,17 +71,12 @@ export default function CreateAppointments() {
                 <input type="text" id="specialty" name="specialty" className="form-control" value={appointment.specialty} onChange={handleChange} />
               </div>
               <div className="form-group">
-                <label className="form-label" htmlFor="date">Date</label>
-                <input type="text" id="date" name="date" className="form-control" value={appointment.date} onChange={handleChange} />
-              </div>
-              <div className="form-group">
                 <label className="form-label" htmlFor="student">Student</label>
                 <input type="text" id="student" name="student" className="form-control" value={appointment.student} onChange={handleChange} />
               </div>
               <div className="form-group">
-                <label className="form-label" htmlFor="professional">professional</label>
-                <input className="form-select" id="professional" name="professional" value={appointment.professional} onChange={handleChange}>
-                </input>
+                <label className="form-label" htmlFor="professional">Professional</label>
+                <input type="text" id="professional" name="professional" className="form-control" value={appointment.professional} onChange={handleChange} />
               </div>
               <div className="form-group p-2">
                 <button className="btn btn-outline-success" type="button" onClick={handleCreateAppointments}>Salvar</button>
