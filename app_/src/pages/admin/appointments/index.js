@@ -48,9 +48,9 @@ export default function appointments() {
         <table className="table table-hover">
         <thead>
             <tr>
-            <th scope="col">#</th>
-            <th scope="col">Nome</th>
-            <th scope="col">E-mail</th>
+            <th scope="col">ID</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
             <th scope="col">Ação</th>
             </tr>
         </thead>
