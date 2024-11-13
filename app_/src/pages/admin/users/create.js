@@ -9,12 +9,12 @@ export default function CreateUser() {
   const API_URL = "http://localhost:3001/api/users";
 
   const [user, setUser] = useState({
-    author_name: "",
-    author_email: "",
-    author_user: "",
-    author_pwd: "",
-    author_level: "",
-    author_status: "",
+    name: "",    // Renomeado para refletir os dados do backend
+    email: "",   // Renomeado para refletir os dados do backend
+    user: "",    // Renomeado para refletir os dados do backend
+    pwd: "",     // Renomeado para refletir os dados do backend
+    level: "",   // Renomeado para refletir os dados do backend
+    status: "",  // Renomeado para refletir os dados do backend
   });
 
   const [message, setMessage] = useState({ message: "", status: "" });
@@ -32,6 +32,7 @@ export default function CreateUser() {
     { value: 'false', text: 'Inativo' },
   ];
 
+  // Função para lidar com as mudanças nos campos do formulário
   const handleChange = (event) => {
     const { name, value } = event.target;
     setUser({
@@ -40,10 +41,11 @@ export default function CreateUser() {
     });
   };
 
+  // Função para enviar os dados do formulário e criar um novo usuário
   const handleCreateUser = async () => {
     try {
-      const response = await Axios.post(API_URL, user);
-      setMessage({ message: response.data.message, status: "ok" });
+      const response = await Axios.post(API_URL, user);  // Envia os dados ao backend
+      setMessage({ message: response.data.sucesso, status: "ok" });
     } catch (error) {
       console.error('Erro ao criar o Usuário:', error);
       setMessage({ message: "Erro ao criar o Usuário!", status: "error" });
@@ -74,24 +76,24 @@ export default function CreateUser() {
             
                 <form method="POST">
                 <div className="form-group">
-                    <label className="form-label" htmlFor="author_name">Nome</label>
-                    <input type="text" id="author_name" name="author_name" className="form-control" value={user.author_name} onChange={handleChange}/>
+                    <label className="form-label" htmlFor="name">Nome</label>
+                    <input type="text" id="name" name="name" className="form-control" value={user.name} onChange={handleChange} />
                 </div>
                 <div className="form-group">
-                    <label className="form-label" htmlFor="author_email">E-mail</label>
-                    <input type="text" id="author_email" name="author_email" className="form-control" value={user.author_email} onChange={handleChange} />
+                    <label className="form-label" htmlFor="email">E-mail</label>
+                    <input type="text" id="email" name="email" className="form-control" value={user.email} onChange={handleChange} />
                 </div>
                 <div className="form-group">
-                    <label className="form-label" htmlFor="author_user">Usuário</label>
-                    <input type="text" id="author_user" name="author_user" className="form-control" value={user.author_user} onChange={handleChange} />
+                    <label className="form-label" htmlFor="user">Usuário</label>
+                    <input type="text" id="user" name="user" className="form-control" value={user.user} onChange={handleChange} />
                 </div>
                 <div className="form-group">
-                    <label className="form-label" htmlFor="author_pwd">Senha</label>
-                    <input type="password" id="author_pwd" name="author_pwd" className="form-control" value={user.author_pwd} onChange={handleChange} />
+                    <label className="form-label" htmlFor="pwd">Senha</label>
+                    <input type="password" id="pwd" name="pwd" className="form-control" value={user.pwd} onChange={handleChange} />
                 </div>
                 <div className="form-group">
-                    <label className="form-label" htmlFor="author_level">Nível</label>
-                    <select className="form-select" id="author_level" name="author_level" value={user.author_level} onChange={handleChange}>
+                    <label className="form-label" htmlFor="level">Nível</label>
+                    <select className="form-select" id="level" name="level" value={user.level} onChange={handleChange}>
                       {optionsLevel.map(option => (
                         <option key={option.value} value={option.value}>
                           {option.text}
@@ -100,8 +102,8 @@ export default function CreateUser() {
                     </select>
                 </div>
                 <div className="form-group">
-                    <label className="form-label" htmlFor="author_status">Status</label>
-                    <select className="form-select" id="author_status" name="author_status" value={user.author_status} onChange={handleChange}>
+                    <label className="form-label" htmlFor="status">Status</label>
+                    <select className="form-select" id="status" name="status" value={user.status} onChange={handleChange}>
                       {optionsStatus.map(option => (
                         <option key={option.value} value={option.value}>
                           {option.text}
@@ -110,13 +112,13 @@ export default function CreateUser() {
                     </select>
                 </div>
                 <div className="form-group p-2">
-                    <button className="btn btn-outline-success" type="button" onClick={handleCreateUser} >Salvar</button>
+                    <button className="btn btn-outline-success" type="button" onClick={handleCreateUser}>Salvar</button>
                     <Link className="btn btn-outline-info" href="/admin/users">Voltar</Link>
                 </div>
                 </form>
             </div>
         </div>
       </div>  
-  </>
+    </>
   )
 }
