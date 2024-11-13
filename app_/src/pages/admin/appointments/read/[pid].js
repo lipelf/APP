@@ -10,12 +10,12 @@ export default function ReadAppointments() {
   const API_URL = "http://localhost:3001/api/appointments/";
 
   const [appointment, setAppointment] = useState({
-    author_specialty: "",
-    author_comments: "",
-    author_date: "",
-    author_student: "",
-    author_professional: "",
-    author_status: ""
+    specialty: "",
+    comments: "",
+    date: "",
+    student: "",
+    professional: "",
+    status: ""
   });
 
   const router = useRouter();
@@ -77,24 +77,24 @@ export default function ReadAppointments() {
             
                 <form method="POST">
                 <div className="form-group">
-                    <label className="form-label" htmlFor="author_comments">Comments</label>
-                    <input type="text" id="author_comments" name="author_comments" className="form-control" value={appointment.author_comments} readOnly />
+                    <label className="form-label" htmlFor="comments">Comments</label>
+                    <input type="text" id="comments" name="comments" className="form-control" value={appointment.comments} readOnly />
                 </div>
                 <div className="form-group">
-                    <label className="form-label" htmlFor="author_specialty">Specialty</label>
-                    <input type="text" id="author_specialty" name="author_specialty" className="form-control" value={appointment.author_specialty} readOnly />
+                    <label className="form-label" htmlFor="specialty">Specialty</label>
+                    <input type="text" id="specialty" name="specialty" className="form-control" value={appointment.specialty} readOnly />
                 </div>
                 <div className="form-group">
-                    <label className="form-label" htmlFor="author_date">Date</label>
-                    <input type="text" id="author_date" name="author_date" className="form-control" value={appointment.author_date} readOnly />
+                    <label className="form-label" htmlFor="date">Date</label>
+                    <input type="text" id="date" name="date" className="form-control" value={appointment.date} readOnly />
                 </div>
                 <div className="form-group">
-                    <label className="form-label" htmlFor="author_student">Student</label>
-                    <input type="text" id="author_student" name="author_student" className="form-control" value={appointment.author_student} readOnly />
+                    <label className="form-label" htmlFor="student">Student</label>
+                    <input type="text" id="student" name="student" className="form-control" value={appointment.student} readOnly />
                 </div>
                 <div className="form-group">
-                    <label className="form-label" htmlFor="author_professional">Nível</label>
-                    <select className="form-select" id="author_professional" name="author_professional" value={appointment.author_professional} disabled>
+                    <label className="form-label" htmlFor="professional">Nível</label>
+                    <select className="form-select" id="professional" name="professional" value={appointment.professional} disabled>
                       {optionsLevel.map(option => (
                         <option key={option.value} value={option.value}>
                           {option.text}
@@ -103,8 +103,8 @@ export default function ReadAppointments() {
                     </select>
                 </div>
                 <div className="form-group">
-                    <label className="form-label" htmlFor="author_status">Status</label>
-                    <select className="form-select" id="author_status" name="author_status" value={appointment.author_status} disabled>
+                    <label className="form-label" htmlFor="status">Status</label>
+                    <select className="form-select" id="status" name="status" value={appointment.status} disabled>
                       {optionsStatus.map(option => (
                         <option key={option.value} value={option.value}>
                           {option.text}
@@ -119,6 +119,6 @@ export default function ReadAppointments() {
             </div>
         </div>
       </div>  
-  </>
+    </>
   )
 }
