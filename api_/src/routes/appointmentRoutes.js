@@ -51,13 +51,13 @@ router.get('/', async (req, res) => {
  */
 router.get('/:id', async (req, res) => {
     try {
-        const appointment = await Appointment.findOne({ id: req.params.id });
+        const appointment = await Appointment.findById(req.params.id); // Usando o _id do MongoDB
         if (!appointment) {
-            return res.status(404).json({ erro: 'Agendamento não encontrado' });
+            return res.status(404).json({ error: 'Agendamento não encontrado' });
         }
-        res.json(appointment);
-    } catch (err) {
-        res.status(500).json({ erro: 'Erro ao buscar o agendamento' });
+        res.status(200).json(appointment);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch user' });
     }
 });
 
@@ -128,15 +128,16 @@ router.put('/:id', async (req, res) => {
  */
 router.delete('/:id', async (req, res) => {
     try {
-        const deletedAppointment = await Appointment.findOneAndDelete({ id: req.params.id });
+        // A alteração aqui é que estamos agora buscando pelo campo "_id" do MongoDB, não o "id" customizado
+        const deletedAppointment = await Appointment.findByIdAndDelete(req.params.id);
 
         if (!deletedAppointment) {
-            return res.status(404).json({ erro: 'Agendamento não encontrado' });
+            return res.status(404).json({ erro: 'Usuário não encontrado' });
         }
 
-        res.json({ mensagem: 'Agendamento deletado com sucesso.' });
+        res.json({ mensagem: 'Usuário deletado com sucesso.' });
     } catch (err) {
-        res.status(500).json({ erro: 'Erro ao deletar o agendamento' });
+        res.status(500).json({ erro: 'Erro ao deletar o usuário' });
     }
 });
 
