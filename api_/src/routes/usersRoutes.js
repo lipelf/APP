@@ -53,9 +53,9 @@ router.get('/', async (req, res) => {
  */
 router.get('/:id', async (req, res) => {
     try {
-        const user = await User.findById(req.params.id);
+        const user = await User.findById(req.params.id); // Usando o _id do MongoDB
         if (!user) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(404).json({ error: 'Usuário não encontrado' });
         }
         res.status(200).json(user);
     } catch (error) {
@@ -106,19 +106,19 @@ router.put('/:id', async (req, res) => {
     const { name, email, user, pwd, level, status } = req.body;
 
     try {
-        const updatedUser = await User.findOneAndUpdate(
-            { id: req.params.id },
+        const updatedUser = await User.findByIdAndUpdate(
+            req.params.id, // O _id do MongoDB é passado diretamente
             { name, email, user, pwd, level, status },
             { new: true, runValidators: true }
         );
 
         if (!updatedUser) {
-            return res.status(404).json({ erro: 'Usuário não encontrado' });
+            return res.status(404).json({ error: 'Usuário não encontrado' });
         }
 
         res.json(updatedUser);
     } catch (err) {
-        res.status(400).json({ erro: 'Erro ao atualizar o usuário' });
+        res.status(400).json({ error: 'Erro ao atualizar o usuário' });
     }
 });
 
@@ -131,7 +131,8 @@ router.put('/:id', async (req, res) => {
  */
 router.delete('/:id', async (req, res) => {
     try {
-        const deletedUser = await User.findOneAndDelete({ id: req.params.id });
+        // A alteração aqui é que estamos agora buscando pelo campo "_id" do MongoDB, não o "id" customizado
+        const deletedUser = await User.findByIdAndDelete(req.params.id);
 
         if (!deletedUser) {
             return res.status(404).json({ erro: 'Usuário não encontrado' });

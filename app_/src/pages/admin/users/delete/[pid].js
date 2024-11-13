@@ -10,20 +10,20 @@ export default function DeleteUser() {
   const API_URL = "http://localhost:3001/api/users/";
 
   const [user, setUser] = useState({
-    author_id: "",
-    author_name: "",
-    author_email: "",
-    author_user: "",
-    author_pwd: "",
-    author_level: "",
-    author_status: "",
-    author_create_date: ""
+    id: "",
+    name: "",
+    email: "",
+    user: "",
+    pwd: "",
+    level: "",
+    status: ""
   });
 
   const router = useRouter();
   const { pid } = router.query;
 
   const [message, setMessage] = useState({ message: "", status: "" });
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   const optionsLevel = [
     { value: '', text: '-- Selecione um nível de acesso --' },
@@ -33,9 +33,8 @@ export default function DeleteUser() {
   ];
 
   const optionsStatus = [
-    { value: '', text: '-- Selecione um estado --' },
-    { value: 'true', text: 'Ativo' },
-    { value: 'false', text: 'Inativo' },
+    { value: 'on', text: 'Ativo' },
+    { value: 'off', text: 'Inativo' },
   ];
 
   useEffect(() => {
@@ -59,7 +58,8 @@ export default function DeleteUser() {
     try {
       const response = await Axios.delete(`${API_URL}${pid}`);
       setMessage({ message: response.data.message, status: "ok" });
-      router.push('/admin/users'); // Redireciona para a lista de usuários após a deleção
+      setShowConfirmation(false); // Fechar o modal após deletar
+      router.push('/admin/users');
     } catch (error) {
       console.error('Erro ao deletar o usuário:', error);
       setMessage({ message: "Erro ao deletar o usuário!", status: "error" });
@@ -78,65 +78,109 @@ export default function DeleteUser() {
         <MenuUsers />
         { 
           message.status === "" ? "" : 
-          message.status === "ok" ? <div className='alert alert-success' role='alert'> { message.message } <Link className='alert-link' href='/admin/users'>Voltar</Link></div> : 
+          message.status === "ok" ? "" : 
           <div className='alert alert-danger' role='alert'> { message.message } <Link className='alert-link' href='/admin/users'>Voltar</Link></div>
         }
       </div>
   
       <div className="d-flex justify-content-center p-2">
         <div className="container">
-            <div className="row border-bottom">
-                <h3> Edição de Usuário </h3>
-            
-                <form method="POST">
-                <div className="form-group">
-                    <label className="form-label" htmlFor="author_name">Nome</label>
-                    <input type="text" id="author_name" name="author_name" className="form-control" value={user.author_name} readOnly/>
-                </div>
-                <div className="form-group">
-                    <label className="form-label" htmlFor="author_email">E-mail</label>
-                    <input type="text" id="author_email" name="author_email" className="form-control" value={user.author_email} readOnly />
-                </div>
-                <div className="form-group">
-                    <label className="form-label" htmlFor="author_user">Usuário</label>
-                    <input type="text" id="author_user" name="author_user" className="form-control" value={user.author_user} readOnly />
-                </div>
-                <div className="form-group">
-                    <label className="form-label" htmlFor="author_pwd">Senha</label>
-                    <input type="password" id="author_pwd" name="author_pwd" className="form-control" value={user.author_pwd} readOnly />
-                </div>
-                <div className="form-group">
-                    <label className="form-label" htmlFor="author_level">Nível</label>
-                    <select className="form-select" id="author_level" name="author_level" value={user.author_level} readOnly>
-                      {optionsLevel.map(option => (
-                        <option key={option.value} value={option.value}>
-                          {option.text}
-                        </option>
-                      ))}
-                    </select>
-                </div>
-                <div className="form-group">
-                    <label className="form-label" htmlFor="author_status">Status</label>
-                    <select className="form-select" id="author_status" name="author_status" value={user.author_status} readOnly>
-                      {optionsStatus.map(option => (
-                        <option key={option.value} value={option.value}>
-                          {option.text}
-                        </option>
-                      ))}
-                    </select>
-                </div>
-                <div className="form-group">
-                    <label className="form-label" htmlFor="author_create_date">Data de Criação</label>
-                    <input type="text" id="author_create_date" name="author_create_date" className="form-control" value={ user.author_create_date } readOnly/>
-                </div>
-                <div className="form-group p-2">
-                    <button className="btn btn-outline-danger" type="button" onClick={handleDeleteUser} >Deletar</button>
-                    <Link className="btn btn-outline-info" href="/admin/users">Voltar</Link>
-                </div>
-                </form>
-            </div>
+          <div className="row border-bottom">
+            <h3> Detalhes do Usuário </h3>
+            <form>
+              <div className="form-group">
+                <label className="form-label" htmlFor="author_name">Nome</label>
+                <input type="text" id="author_name" name="author_name" className="form-control" value={user.name} readOnly/>
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="author_email">E-mail</label>
+                <input type="text" id="author_email" name="author_email" className="form-control" value={user.email} readOnly/>
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="author_user">Usuário</label>
+                <input type="text" id="author_user" name="author_user" className="form-control" value={user.user} readOnly/>
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="author_pwd">Senha</label>
+                <input type="password" id="author_pwd" name="author_pwd" className="form-control" value={user.pwd} readOnly/>
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="author_level">Nível</label>
+                <select className="form-select" id="author_level" name="author_level" value={user.level} readOnly>
+                  {optionsLevel.map(option => (
+                    <option key={option.value} value={option.value}>
+                      {option.text}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="author_status">Status</label>
+                <select className="form-select" id="author_status" name="author_status" value={user.status} readOnly>
+                  {optionsStatus.map(option => (
+                    <option key={option.value} value={option.value}>
+                      {option.text}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group p-2">
+                <button
+                  type="button"
+                  className="btn btn-outline-danger"
+                  onClick={() => setShowConfirmation(true)}
+                >
+                  Deletar
+                </button>
+                <Link className="btn btn-outline-info" href="/admin/users">Voltar</Link>
+              </div>
+            </form>
+          </div>
         </div>
       </div>  
-  </>
-  )
+
+      {showConfirmation && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h4>Confirmar Exclusão</h4>
+            <p>Tem certeza de que deseja excluir o usuário?</p>
+            <button
+              className="btn btn-danger"
+              onClick={handleDeleteUser}
+            >
+              Confirmar
+            </button>
+            <button
+              className="btn btn-secondary"
+              onClick={() => setShowConfirmation(false)}
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
+
+      <style jsx>{`
+        .modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.5);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 1000;
+        }
+        .modal-content {
+          background: #fff;
+          padding: 20px;
+          border-radius: 5px;
+          max-width: 400px;
+          text-align: center;
+        }
+      `}</style>
+    </>
+  );
 }
