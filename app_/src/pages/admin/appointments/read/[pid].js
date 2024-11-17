@@ -1,5 +1,5 @@
 import NavAdmin from '@/components/NavAdmin';
-import MenuAppointments from '@/components/MenuAppointments';
+import MenuAdmin from '@/components/MenuAdmin';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -62,7 +62,7 @@ export default function ReadAppointments() {
       </Head>
       <div>
         <NavAdmin />
-        <MenuAppointments />
+        <MenuAdmin />
         { 
           message.status === "" ? "" : 
           message.status === "ok" ? "" : 

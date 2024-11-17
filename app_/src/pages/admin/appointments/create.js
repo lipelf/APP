@@ -1,5 +1,5 @@
 import NavAdmin from '@/components/NavAdmin';
-import MenuAppointments from '@/components/MenuAppointments';
+import MenuAdmin from '@/components/MenuAdmin';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -49,7 +49,7 @@ export default function CreateAppointments() {
       </Head>
       <div>
         <NavAdmin />
-        <MenuAppointments />
+        <MenuAdmin />
         { 
           message.status === "" ? "" : 
           message.status === "ok" ? <div className='alert alert-success' role='alert'> { message.message } <Link className='alert-link' href='/admin/appointments'>Voltar</Link></div> : 

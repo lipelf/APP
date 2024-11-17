@@ -1,11 +1,10 @@
 import NavAdmin from '@/components/NavAdmin';
-import MenuUsers from '@/components/MenuUsers';
+import MenuAdmin from '@/components/MenuAdmin';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Axios from 'axios';
 import { useRouter } from 'next/router';
-
 
 export default function ReadUser() {
   const API_URL = "http://localhost:3001/api/users/";
@@ -19,7 +18,6 @@ export default function ReadUser() {
     level: "",
     status: ""
   });
-
 
   const router = useRouter();
   const { pid } = router.query;
@@ -64,7 +62,7 @@ export default function ReadUser() {
       </Head>
       <div>
         <NavAdmin />
-        <MenuUsers />
+        <MenuAdmin />
         { 
           message.status === "" ? "" : 
           message.status === "ok" ? "" : 
@@ -77,7 +75,7 @@ export default function ReadUser() {
             <div className="row border-bottom">
                 <h3> Detalhes do Usuário </h3>
             
-                <form >
+                <form>
                 <div className="form-group">
                     <label className="form-label" htmlFor="author_name">Nome</label>
                     <input type="text" id="author_name" name="author_name" className="form-control" value={user.name} readOnly/>
@@ -121,6 +119,6 @@ export default function ReadUser() {
             </div>
         </div>
       </div>  
-  </>
+    </>
   )
 }

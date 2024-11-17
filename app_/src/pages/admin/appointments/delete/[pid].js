@@ -1,5 +1,5 @@
 import NavAdmin from '@/components/NavAdmin';
-import MenuUsers from '@/components/MenuUsers';
+import MenuAdmin from '@/components/MenuAdmin';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -75,7 +75,7 @@ export default function DeleteUser() {
       </Head>
       <div>
         <NavAdmin />
-        <MenuUsers />
+        <MenuAdmin />
         { 
           message.status === "" ? "" : 
           message.status === "ok" ? <div className='alert alert-success' role='alert'> { message.message } <Link className='alert-link' href='/admin/users'>Voltar</Link></div> : 
