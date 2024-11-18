@@ -103,16 +103,19 @@ router.put('/:id', async (req, res) => {
     const { specialty, comments, date, student, professional } = req.body;
 
     try {
-        const updatedAppointment = await Appointment.findOneAndUpdate(
-            { id: req.params.id },
-            { specialty, comments, date, student, professional },
-            { new: true, runValidators: true }
+        // Procura o agendamento pelo _id do MongoDB
+        const updatedAppointment = await Appointment.findByIdAndUpdate(
+            req.params.id,  // Usando o id da URL para buscar o agendamento
+            { specialty, comments, date, student, professional },  // Atualiza os campos necessários
+            { new: true, runValidators: true }  // Garante que o agendamento será retornado atualizado
         );
 
+        // Caso o agendamento não seja encontrado, retorna erro 404
         if (!updatedAppointment) {
             return res.status(404).json({ erro: 'Agendamento não encontrado' });
         }
 
+        // Retorna o agendamento atualizado
         res.json(updatedAppointment);
     } catch (err) {
         res.status(400).json({ erro: 'Erro ao atualizar o agendamento' });

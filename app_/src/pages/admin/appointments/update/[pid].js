@@ -1,23 +1,19 @@
-import NavAdmin from '@/components/NavAdmin';
-import MenuUsers from '@/components/MenuUsers';
-import Head from 'next/head';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
 import Axios from 'axios';
+import NavAdmin from '@/components/NavAdmin';
+import MenuAppointments from '@/components/MenuAppointments';
+import Head from 'next/head';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
-export default function UpdateUser() {
-  const API_URL = "http://localhost:3001/api/users/";
+export default function UpdateAppointment() {
+  const API_URL = "http://localhost:3001/api/appointments/";
 
-  const [user, setUser] = useState({
-    author_id: "",
-    author_name: "",
-    author_email: "",
-    author_user: "",
-    author_pwd: "",
-    author_level: "",
-    author_status: "",
-    author_create_date: ""
+  const [appointment, setAppointment] = useState({
+    specialty: "",
+    comments: "",
+    student: "",
+    professional: ""
   });
 
   const router = useRouter();
@@ -25,51 +21,50 @@ export default function UpdateUser() {
 
   const [message, setMessage] = useState({ message: "", status: "" });
 
-  const optionsLevel = [
-    { value: '', text: '-- Selecione um nível de acesso --' },
-    { value: 'admin', text: 'Administrador' },
-    { value: 'user', text: 'Usuário' },
-    { value: 'reader', text: 'Leitor' },
-  ];
-
-  const optionsStatus = [
-    { value: '', text: '-- Selecione um estado --' },
-    { value: 'true', text: 'Ativo' },
-    { value: 'false', text: 'Inativo' },
-  ];
-
   useEffect(() => {
     if (pid) {
-      const getUser = async () => {
+      const getAppointment = async () => {
         try {
           const response = await Axios.get(`${API_URL}${pid}`);
-          setMessage({ message: response.data.message, status: "ok" });
-          setUser(response.data);
+          setAppointment(response.data);
         } catch (error) {
-          console.error('Erro ao buscar o usuário:', error);
-          setMessage({ message: "Erro ao buscar o usuário!", status: "error" });
+          setMessage({ message: "Erro ao buscar o agendamento!", status: "error" });
         }
       };
 
-      getUser();
+      getAppointment();
     }
   }, [pid]);
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setUser({
-      ...user,
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setAppointment({
+      ...appointment,
       [name]: value
     });
   };
 
-  const handleUpdateUser = async () => {
+  const handleUpdateAppointment = async () => {
+    if (!pid) {
+      setMessage({ message: "ID do agendamento não encontrado!", status: "error" });
+      return;
+    }
+
+    const updatedAppointment = {
+      specialty: appointment.specialty,
+      comments: appointment.comments,
+      student: appointment.student,
+      professional: appointment.professional
+    };
+
     try {
-      const response = await Axios.put(`${API_URL}${pid}`, { user });
-      setMessage({ message: response.data.message, status: "ok" });
+      const response = await Axios.put(`${API_URL}${pid}`, updatedAppointment);
+      setMessage({ message: "Agendamento atualizado com sucesso!", status: "ok" });
+      setTimeout(() => {
+        router.push('/admin/appointments');
+      }, 1500);
     } catch (error) {
-      console.error('Erro ao alterar o usuário:', error);
-      setMessage({ message: "Erro ao alterar o usuário!", status: "error" });
+      setMessage({ message: "Erro ao atualizar o agendamento!", status: "error" });
     }
   };
 
@@ -82,68 +77,71 @@ export default function UpdateUser() {
       </Head>
       <div>
         <NavAdmin />
-        <MenuUsers />
-        { 
-          message.status === "" ? "" : 
-          message.status === "ok" ? <div className='alert alert-success' role='alert'> { message.message } <Link className='alert-link' href='/admin/users'>Voltar</Link></div> : 
-          <div className='alert alert-danger' role='alert'> { message.message } <Link className='alert-link' href='/admin/users'>Voltar</Link></div>
-        }
+        <MenuAppointments />
+        { message.status && (
+          <div className={`alert ${message.status === 'ok' ? 'alert-success' : 'alert-danger'}`} role='alert'>
+            { message.message }
+            <Link className='alert-link' href='/admin/appointments'>Voltar</Link>
+          </div>
+        )}
       </div>
-  
+
       <div className="d-flex justify-content-center p-2">
         <div className="container">
-            <div className="row border-bottom">
-                <h3> Edição de Usuário </h3>
-            
-                <form method="POST">
-                <div className="form-group">
-                    <label className="form-label" htmlFor="author_name">Nome</label>
-                    <input type="text" id="author_name" name="author_name" className="form-control" value={user.author_name} onChange={handleChange}/>
-                </div>
-                <div className="form-group">
-                    <label className="form-label" htmlFor="author_email">E-mail</label>
-                    <input type="text" id="author_email" name="author_email" className="form-control" value={user.author_email} onChange={handleChange} />
-                </div>
-                <div className="form-group">
-                    <label className="form-label" htmlFor="author_user">Usuário</label>
-                    <input type="text" id="author_user" name="author_user" className="form-control" value={user.author_user} onChange={handleChange} />
-                </div>
-                <div className="form-group">
-                    <label className="form-label" htmlFor="author_pwd">Senha</label>
-                    <input type="password" id="author_pwd" name="author_pwd" className="form-control" value={user.author_pwd} onChange={handleChange} />
-                </div>
-                <div className="form-group">
-                    <label className="form-label" htmlFor="author_level">Nível</label>
-                    <select className="form-select" id="author_level" name="author_level" value={user.author_level} onChange={handleChange}>
-                      {optionsLevel.map(option => (
-                        <option key={option.value} value={option.value}>
-                          {option.text}
-                        </option>
-                      ))}
-                    </select>
-                </div>
-                <div className="form-group">
-                    <label className="form-label" htmlFor="author_status">Status</label>
-                    <select className="form-select" id="author_status" name="author_status" value={user.author_status} onChange={handleChange}>
-                      {optionsStatus.map(option => (
-                        <option key={option.value} value={option.value}>
-                          {option.text}
-                        </option>
-                      ))}
-                    </select>
-                </div>
-                <div className="form-group">
-                    <label className="form-label" htmlFor="author_create_date">Data de Criação</label>
-                    <input type="text" id="author_create_date" name="author_create_date" className="form-control" value={ user.author_create_date } readOnly/>
-                </div>
-                <div className="form-group p-2">
-                    <button className="btn btn-outline-success" type="button" onClick={handleUpdateUser} >Salvar</button>
-                    <Link className="btn btn-outline-info" href="/admin/users">Voltar</Link>
-                </div>
-                </form>
-            </div>
+          <div className="row border-bottom">
+            <h3>Edição de Appointment</h3>
+            <form>
+              <div className="form-group">
+                <label className="form-label" htmlFor="specialty">Especialidade</label>
+                <input 
+                  type="text" 
+                  id="specialty" 
+                  name="specialty" 
+                  className="form-control" 
+                  value={appointment.specialty} 
+                  onChange={handleChange} 
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="comments">Comentários</label>
+                <textarea 
+                  id="comments" 
+                  name="comments" 
+                  className="form-control" 
+                  value={appointment.comments} 
+                  onChange={handleChange} 
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="student">Estudante</label>
+                <input 
+                  type="text" 
+                  id="student" 
+                  name="student" 
+                  className="form-control" 
+                  value={appointment.student} 
+                  onChange={handleChange} 
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="professional">Profissional</label>
+                <input 
+                  type="text" 
+                  id="professional" 
+                  name="professional" 
+                  className="form-control" 
+                  value={appointment.professional} 
+                  onChange={handleChange} 
+                />
+              </div>
+              <div className="form-group p-2">
+                <button className="btn btn-outline-success" type="button" onClick={handleUpdateAppointment}>Salvar</button>
+                <Link className="btn btn-outline-info" href="/admin/appointments">Voltar</Link>
+              </div>
+            </form>
+          </div>
         </div>
-      </div>  
-  </>
-  )
+      </div>
+    </>
+  );
 }
