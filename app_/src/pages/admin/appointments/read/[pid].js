@@ -93,24 +93,8 @@ export default function ReadAppointments() {
                     <input type="text" id="student" name="student" className="form-control" value={appointment.student} readOnly />
                 </div>
                 <div className="form-group">
-                    <label className="form-label" htmlFor="professional">Nível</label>
-                    <select className="form-select" id="professional" name="professional" value={appointment.professional} disabled>
-                      {optionsLevel.map(option => (
-                        <option key={option.value} value={option.value}>
-                          {option.text}
-                        </option>
-                      ))}
-                    </select>
-                </div>
-                <div className="form-group">
-                    <label className="form-label" htmlFor="status">Status</label>
-                    <select className="form-select" id="status" name="status" value={appointment.status} disabled>
-                      {optionsStatus.map(option => (
-                        <option key={option.value} value={option.value}>
-                          {option.text}
-                        </option>
-                      ))}
-                    </select>
+                    <label className="form-label" htmlFor="professional">Professional</label>
+                    <input type="text" id="professional" name="professional" className="form-control" value={appointment.professional} readOnly />
                 </div>
                 <div className="form-group p-2">
                     <Link className="btn btn-outline-info" href="/admin/appointments">Voltar</Link>
