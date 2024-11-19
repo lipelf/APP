@@ -1,3 +1,4 @@
+
 import Axios from "axios";
 import NavAdmin from "@/components/NavAdmin";
 import MenuAdmin from "@/components/MenuAdmin";
@@ -6,7 +7,50 @@ import Head from "next/head";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
-export default function Admin() {
+export default function Users() {
+  const API_URL = "http://localhost:3001/api/users";
+
+  const [users, setUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    const getAllUsers = async () => {
+      try {
+        const response = await Axios.get(API_URL);
+        setUsers(response.data);
+        setFilteredUsers(response.data);
+      } catch (error) {
+        console.error("Erro ao buscar os usuários:", error);
+      }
+    };
+
+    getAllUsers();
+  }, []);
+
+  const handleSearch = (e) => {
+    const term = e.target.value.toLowerCase();
+    setSearch(term);
+    const filtered = users.filter((user) => user.name.toLowerCase().includes(term));
+    setFilteredUsers(filtered);
+  };
+
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm("Tem certeza de que deseja deletar este usuário?");
+    if (confirmDelete) {
+      try {
+        await Axios.delete(`${API_URL}/${id}`);
+        alert("Usuário deletado com sucesso!");
+        // Remove o usuário deletado da lista exibida
+        setUsers(users.filter((user) => user._id !== id));
+        setFilteredUsers(filteredUsers.filter((user) => user._id !== id));
+      } catch (error) {
+        console.error("Erro ao deletar o usuário:", error);
+        alert("Erro ao deletar o usuário. Tente novamente.");
+      }
+    }
+  };
+
   return (
     <>
       <Head>
@@ -23,17 +67,70 @@ export default function Admin() {
       <div className="d-flex justify-content-center p-2">
         <div className="container">
           <div className="row border-bottom">
-              <h3> Lista de Contas Atrasadas</h3>
-          </div>
-          <div className="row border-bottom">
-              <h3> Lista de Lancaçamentos</h3>
-          </div>
-          <div className="row border-bottom">
-              <h3> Buscador de Lançamentos</h3>
-              <div className="input-group">
-                  <input type="text" className="form-control" placeholder="Palavra-chave" aria-describedby="button-busca" />
-                  <button className="btn btn-outline-secondary" type="button" id="button-busca">Buscar</button>
-              </div>
+            <h3>Lista de Usuários</h3>
+
+            {/* Campo de Busca */}
+            <div className="mb-3">
+              <input
+                type="text"
+                placeholder="Buscar por nome..."
+                className="form-control"
+                value={search}
+                onChange={handleSearch}
+              />
+            </div>
+
+            {/* Botão Criar Usuário */}
+            <div className="d-flex justify-content-end mb-3">
+              <Link href="/admin/users/create" className="btn btn-primary">
+                Criar Usuário
+              </Link>
+            </div>
+
+            {/* Tabela de Usuários */}
+            <table className="table table-hover table-dark">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Nome</th>
+                  <th scope="col">E-mail</th>
+                  <th scope="col">Ação</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredUsers.map((user) => (
+                  <tr key={user._id}>
+                    <th scope="row">{user._id}</th>
+                    <td>{user.name}</td>
+                    <td>{user.email}</td>
+                    <td>
+                      <a
+                        className="btn btn-outline-success btn-sm me-2"
+                        href={`/admin/users/read/${user._id}`}
+                      >
+                        Visualizar
+                      </a>
+                      <a
+                        className="btn btn-outline-primary btn-sm me-2"
+                        href={`/admin/users/update/${user._id}`}
+                      >
+                        Editar
+                      </a>
+                      <button
+                        className="btn btn-outline-danger btn-sm"
+                        onClick={() => handleDelete(user._id)}
+                      >
+                        Deletar
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            {filteredUsers.length === 0 && (
+              <p className="text-center text-light">Nenhum usuário encontrado.</p>
+            )}
           </div>
         </div>
       </div>
