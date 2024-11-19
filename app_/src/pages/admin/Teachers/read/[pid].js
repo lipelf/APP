@@ -7,16 +7,15 @@ import Axios from 'axios';
 import { useRouter } from 'next/router';
 
 
-export default function ReadStudent() {
-  const API_URL = "http://localhost:3001/api/students/";
+export default function ReadTeacher() {
+  const API_URL = "http://localhost:3001/api/teachers/";
 
-  const [student, setStudent] = useState({
+  const [teacher, setTeacher] = useState({
     id: "",
     name: "",
-    age: "",
-    parents: "",
-    phone: "",
-    special: "",
+    school_disciplines: "",
+    contact: "",
+    phone_number: "",
     status: ""
   });
 
@@ -33,18 +32,18 @@ export default function ReadStudent() {
 
   useEffect(() => {
     if (pid) {
-      const getStudent = async () => {
+      const getTeacher = async () => {
         try {
           const response = await Axios.get(`${API_URL}${pid}`);
           setMessage({ message: response.data.message, status: "ok" });
-          setStudent(response.data);
+          setTeacher(response.data);
         } catch (error) {
-          console.error('Erro ao buscar o usuário:', error);
-          setMessage({ message: "Erro ao buscar o usuário!", status: "error" });
+          console.error('Erro ao buscar teacher:', error);
+          setMessage({ message: "Erro ao buscar teacher!", status: "error" });
         }
       };
 
-      getStudent();
+      getTeacher();
     }
   }, [pid]);
 
@@ -61,39 +60,35 @@ export default function ReadStudent() {
         { 
           message.status === "" ? "" : 
           message.status === "ok" ? "" : 
-          <div className='alert alert-danger' role='alert'> { message.message } <Link className='alert-link' href='/admin/students'>Voltar</Link></div>
+          <div className='alert alert-danger' role='alert'> { message.message } <Link className='alert-link' href='/admin/teachers'>Voltar</Link></div>
         }
       </div>
   
       <div className="d-flex justify-content-center p-2">
         <div className="container">
             <div className="row border-bottom">
-                <h3> Detalhes do estudante </h3>
+                <h3> Detalhes do Professor </h3>
             
-                <form >
+                <form>
                 <div className="form-group">
                     <label className="form-label" htmlFor="name">Nome</label>
-                    <input type="text" id="name" name="name" className="form-control" value={student.name} readOnly/>
+                    <input type="text" id="name" name="name" className="form-control" value={teacher.name} readOnly />
                 </div>
                 <div className="form-group">
-                    <label className="form-label" htmlFor="age">Idade</label>
-                    <input type="number" id="age" name="age" className="form-control" value={student.age} readOnly/>
+                    <label className="form-label" htmlFor="school">Disciplinas</label>
+                    <input type="text" id="school" name="school" className="form-control" value={teacher.school_disciplines} readOnly />
                 </div>
                 <div className="form-group">
-                    <label className="form-label" htmlFor="parents">Parents</label>
-                    <input type="text" id="parents" name="parents" className="form-control" value={student.parents} readOnly/>
+                    <label className="form-label" htmlFor="contact">Contato</label>
+                    <input type="text" id="contact" name="contact" className="form-control" value={teacher.contact} readOnly />
                 </div>
                 <div className="form-group">
-                    <label className="form-label" htmlFor="phone">Phone</label>
-                    <input type="text" id="phone" name="phone" className="form-control" value={student.phone} readOnly/>
-                </div>
-                <div className="form-group">
-                    <label className="form-label" htmlFor="special">Special</label>
-                    <input type="text" id="special" name="special" className="form-control" value={student.special} readOnly/>
+                    <label className="form-label" htmlFor="phone">Número de Telefone</label>
+                    <input type="text" id="phone" name="phone" className="form-control" value={teacher.phone_number} readOnly />
                 </div>
                 <div className="form-group">
                     <label className="form-label" htmlFor="status">Status</label>
-                    <select className="form-select" id="status" name="status" value={student.status} readOnly>
+                    <select className="form-select" id="status" name="status" value={teacher.status} readOnly>
                       {optionsStatus.map(option => (
                         <option key={option.value} value={option.value}>
                           {option.text}
@@ -102,7 +97,8 @@ export default function ReadStudent() {
                     </select>
                 </div>
                 <div className="form-group p-2">
-                    <Link className="btn btn-outline-info" href="/admin/students">Voltar</Link>
+                    <button className="btn btn-outline-success" type="button" onClick={handleCreateTeacher}>Salvar</button>
+                    <Link className="btn btn-outline-info" href="/admin/teachers">Voltar</Link>
                 </div>
                 </form>
             </div>

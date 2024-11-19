@@ -1,29 +1,29 @@
 import Axios from 'axios'
 import NavAdmin from '@/components/NavAdmin'
-import StudentAction from '@/components/StudentAction'
+import TeachersAction from '@/components/TeachersAction'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import MenuAdmin from '@/components/MenuAdmin'
 
 
-export default function users() {
+export default function teacher() {
 
-  const API_URL = "http://localhost:3001/api/students"
+  const API_URL = "http://localhost:3001/api/teachers"
   
-  const [student, setStudents] = useState([]); 
+  const [teachers, setTeacher] = useState([]); 
   
   useEffect(() => {
-    const getAllStudents = async () => {
+    const getAllTeachers = async () => {
       try {
         const response = await Axios.get(API_URL);
-        setStudents(response.data);
+        setTeacher(response.data);
       } catch (error) {
-        console.error('Erro ao buscar os usuários:', error);
+        console.error('Erro ao buscar os professores:', error);
       }
     };
 
-    getAllStudents();
+    getAllTeachers();
 
   }, []);
 
@@ -43,26 +43,24 @@ export default function users() {
       <div className="d-flex justify-content-center p-2">
         <div className="container">
         <div className="row border-bottom">
-        <h3> Lista de estudantes </h3>
+        <h3> Lista de Professores </h3>
         
         <table className="table table-hover table-dark">
         <thead>
             <tr>
             <th scope="col">ID</th>
             <th scope="col">Nome</th>
-            <th scope="col">Idade</th>
             <th scope="col">Ação</th>
             </tr>
         </thead>
         <tbody>
 
-        {student.map( students => (
-            <tr key={students._id}>
-              <th scope="row">{students._id}</th>
-              <td>{students.name}</td>
-              <td>{students.age}</td>
+        {teachers.map( teacher => (
+            <tr key={teacher._id}>
+              <th scope="row">{teacher._id}</th>
+              <td>{teacher.name}</td>
               <td>
-                <StudentAction pid={ students._id }></StudentAction>
+                <TeachersAction pid={ teacher._id }></TeachersAction>
               </td>
             </tr>
         ))}

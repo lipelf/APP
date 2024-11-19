@@ -4,7 +4,7 @@ import EventsAction from '@/components/EventsAction';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import MenuEvents from '@/components/MenuEvents'; 
+import MenuAdmin from '@/components/MenuAdmin'; 
 
 export default function Events() { 
   const API_URL = "http://localhost:3001/api/events"; 
@@ -39,7 +39,7 @@ export default function Events() {
       </Head>
       <div>
         <NavAdmin />
-        <MenuEvents />
+        <MenuAdmin />
       </div>
 
       <div className="d-flex justify-content-center p-2">

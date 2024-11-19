@@ -1,6 +1,6 @@
 import Axios from 'axios';
 import NavAdmin from '@/components/NavAdmin';
-import MenuAppointments from '@/components/MenuAppointments';
+import MenuAdmin from '@/components/MenuAdmin';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
@@ -77,7 +77,7 @@ export default function UpdateAppointment() {
       </Head>
       <div>
         <NavAdmin />
-        <MenuAppointments />
+        <MenuAdmin />
         { message.status && (
           <div className={`alert ${message.status === 'ok' ? 'alert-success' : 'alert-danger'}`} role='alert'>
             { message.message }

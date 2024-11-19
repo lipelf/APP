@@ -1,5 +1,5 @@
 import NavAdmin from '@/components/NavAdmin';
-import MenuStudents from '@/components/MenuStudents';
+import MenuAdmin from '@/components/MenuAdmin';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -54,7 +54,7 @@ export default function CreateStudents() {
       </Head>
       <div>
         <NavAdmin />
-        <MenuStudents />
+        <MenuAdmin />
         { 
           message.status === "" ? "" : 
           message.status === "ok" ? <div className='alert alert-success' role='alert'> { message.message } <Link className='alert-link' href='/admin/students'>Voltar</Link></div> : 

@@ -1,5 +1,5 @@
 import NavAdmin from '@/components/NavAdmin';
-import MenuEvents from '@/components/MenuEvents';
+import MenuAdmin from '@/components/MenuAdmin';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -85,7 +85,7 @@ export default function UpdateEvent() {
       </Head>
       <div>
         <NavAdmin />
-        <MenuEvents />
+        <MenuAdmin />
         { 
           message.status === "" ? "" : 
           message.status === "ok" ? (

@@ -1,5 +1,5 @@
 import NavAdmin from '@/components/NavAdmin';
-import MenuEvents from '@/components/MenuEvents';
+import MenuAdmin from '@/components/MenuAdmin';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -56,7 +56,7 @@ export default function CreateEvent() {
       </Head>
       <div>
         <NavAdmin />
-        <MenuEvents />
+        <MenuAdmin />
         { 
           message.status === "" ? "" : 
           message.status === "ok" ? <div className='alert alert-success' role='alert'> { message.message } <Link className='alert-link' href='/admin/events'>Voltar</Link></div> : 

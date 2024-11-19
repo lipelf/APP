@@ -1,5 +1,5 @@
 import NavAdmin from '@/components/NavAdmin';
-import MenuUsers from '@/components/MenuUsers';
+import MenuAdmin from '@/components/MenuAdmin';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -88,7 +88,7 @@ export default function UpdateUser() {
       </Head>
       <div>
         <NavAdmin />
-        <MenuUsers />
+        <MenuAdmin />
         { 
   message.status === "" ? "" : 
   message.status === "ok" ? (

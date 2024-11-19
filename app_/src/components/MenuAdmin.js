@@ -4,12 +4,30 @@ export default function MenuAdmin() {
     return (
 
     <div className="d-flex justify-content-start">
-        <div className="p-2"><Link className="navbar-brand" href="#">Admin</Link></div>
-        <div className="p-2"><Link className="nav-link" href="/admin/users">Usuários</Link></div>
-        <div className="p-2"><Link className="nav-link" href="/admin/appointments">Appointments</Link></div>
-        <div className="p-2"><Link className="nav-link" href="/admin/students">Students</Link></div>
-        <div className="p-2"><Link className="nav-link" href="/admin/events">Events</Link></div>
-      </div>
+        <div className="sidebar">
+      <ul className="menu-list">
+        <li>
+          <Link href="/admin">Usuários</Link>
+        </li>
+        <li>
+          <Link href="/admin/appointments">Appointments</Link>
+        </li>
+        <li>
+          <Link href="/admin/students">Students</Link>
+        </li>
+        <li>
+          <Link  href="/admin/events">Events</Link>
+        </li>
+          <Link href="/admin/teachers">Teachers</Link>
+        <li>
+          <Link href="/admin/professionals">Professionals</Link>
+        </li>
+        <li>
+          <Link href="/admin/settings">Configurações</Link>
+        </li>
+      </ul>
+    </div>
+    </div>
 
     )
 }

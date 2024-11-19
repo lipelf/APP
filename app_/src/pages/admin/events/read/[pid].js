@@ -1,5 +1,5 @@
 import NavAdmin from '@/components/NavAdmin';
-import MenuEvents from '@/components/MenuEvents'; // Alterado para eventos
+import MenuAdmin from '@/components/MenuAdmin'; // Alterado para eventos
 import Head from 'next/head';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -66,7 +66,7 @@ export default function ReadEvent() { // Alterado para eventos
       </Head>
       <div>
         <NavAdmin />
-        <MenuEvents /> {/* Alterado para eventos */}
+        <MenuAdmin /> {/* Alterado para eventos */}
         { 
           message.status === "" ? "" : 
           message.status === "ok" ? "" : 

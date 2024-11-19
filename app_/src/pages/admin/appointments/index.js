@@ -1,29 +1,28 @@
 import Axios from 'axios'
 import NavAdmin from '@/components/NavAdmin'
-import AppointmentsAction from '@/components/AppointmentsAction'
+import MenuAdmin from '@/components/MenuAdmin'
+import UserAction from '@/components/UserAction'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import MenuAppointments from '@/components/MenuAppointments'
 
-
-export default function appointments() {
+export default function Appointments() {
 
   const API_URL = "http://localhost:3001/api/appointments"
   
   const [appointments, setAppointments] = useState([]); 
   
   useEffect(() => {
-    const getAllappointments = async () => {
+    const getAllAppointments = async () => {
       try {
         const response = await Axios.get(API_URL);
         setAppointments(response.data);
       } catch (error) {
-        console.error('Erro ao buscar Appointments:', error);
+        console.error('Erro ao buscar os compromissos:', error);
       }
     };
 
-    getAllappointments();
+    getAllAppointments();
 
   }, []);
 
@@ -36,40 +35,47 @@ export default function appointments() {
       </Head>
       <div>
         <NavAdmin />
-        <MenuAppointments />
+        <MenuAdmin />
       </div>
 
-  
       <div className="d-flex justify-content-center p-2">
         <div className="container">
-        <div className="row border-bottom">
-        <h3> Lista de Appointments </h3>
-        
-        <table className="table table-hover">
-        <thead>
-            <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Ação</th>
-            </tr>
-        </thead>
-        <tbody>
+          <div className="row border-bottom">
+            <h3>Lista de Compromissos</h3>
 
-        {appointments.map( appointment => (
-            <tr key={appointment._id}>
-              <th scope="row">{appointment._id}</th>
-              <td>
-                <AppointmentsAction pid={ appointment._id }></AppointmentsAction>
-              </td>
-            </tr>
-        ))}
+            {/* Botão Criar Compromisso */}
+            <div className="d-flex justify-content-end mb-3">
+              <Link href="/admin/appointments/create" className="btn btn-primary">
+                Criar Compromisso
+              </Link>
+            </div>
 
-        </tbody>
-        </table>
-        </div>
+            {/* Tabela de Compromissos */}
+            <table className="table table-hover table-dark">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Data</th>
+                  <th scope="col">Paciente</th>
+                  <th scope="col">Ação</th>
+                </tr>
+              </thead>
+              <tbody>
+                {appointments.map(appointment => (
+                  <tr key={appointment._id}>
+                    <th scope="row">{appointment._id}</th>
+                    <td>{appointment.date}</td>
+                    <td>{appointment.patientName}</td>
+                    <td>
+                      <UserAction pid={appointment._id}></UserAction>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>  
-  </>
-  )
+    </>
+  );
 }
-
-
