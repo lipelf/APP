@@ -77,13 +77,12 @@ export default function UpdateAppointment() {
       </Head>
       <div>
         <NavAdmin />
-        <MenuAdmin />
-        { message.status && (
-          <div className={`alert ${message.status === 'ok' ? 'alert-success' : 'alert-danger'}`} role='alert'>
-            { message.message }
-            <Link className='alert-link' href='/admin/appointments'>Voltar</Link>
-          </div>
-        )}
+        <MenuUsers />
+        { 
+          message.status === "" ? "" : 
+          message.status === "ok" ? <div className='alert alert-success' role='alert'> { message.message } <Link className='alert-link' href='/admin/users'>Voltar</Link></div> : 
+          <div className='alert alert-danger' role='alert'> { message.message } <Link className='alert-link' href='/admin/users'>Voltar</Link></div>
+        }
       </div>
 
       <div className="d-flex justify-content-center p-2">

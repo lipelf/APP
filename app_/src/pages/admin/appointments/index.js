@@ -40,46 +40,38 @@ export default function Appointments() {
 
       <div className="d-flex justify-content-center p-2">
         <div className="container">
-          <div className="row border-bottom">
-            <h3>Lista de Compromissos</h3>
+        <div className="row border-bottom">
+        <h3> Lista de Appointments </h3>
+        
+        <table className="table table-hover">
+        <thead>
+            <tr>
+            <th scope="col">ID</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+            <th scope="col">Ação</th>
+            </tr>
+        </thead>
+        <tbody>
 
-            {/* Botão Criar Compromisso */}
-            <div className="d-flex justify-content-end mb-3">
-              <Link href="/admin/appointments/create" className="btn btn-primary">
-                Criar Compromisso
-              </Link>
-            </div>
+        {appointments.map( appointment => (
+            <tr key={appointment._id}>
+              <th scope="row">{appointment._id}</th>
+              <td>{appointment.name}</td>
+              <td>{appointment.email}</td>
+              <td>
+                <AppointmentsAction pid={ appointment._id }></AppointmentsAction>
+              </td>
+            </tr>
+        ))}
 
-            {/* Tabela de Compromissos */}
-            <table className="table table-hover table-dark">
-              <thead>
-                <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Data</th>
-                  <th scope="col">Estudante</th>
-                  <th scope="col">Profissional</th>
-                  <th scope="col">Especialidade</th>
-                  <th scope="col">Ação</th>
-                </tr>
-              </thead>
-              <tbody>
-                {appointments.map(appointment => (
-                  <tr key={appointment._id}>
-                    <th scope="row">{appointment._id}</th>
-                    <td>{appointment.date}</td>
-                    <td>{appointment.student}</td>
-                    <td>{appointment.professional}</td>
-                    <td>{appointment.specialty}</td>
-                    <td>
-                      <AppointmentsAction pid={appointment._id}></AppointmentsAction>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        </tbody>
+        </table>
+        </div>
         </div>
       </div>  
     </>
   );
 }
+
+
