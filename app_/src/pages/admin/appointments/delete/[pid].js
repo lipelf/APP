@@ -7,7 +7,7 @@ import Axios from 'axios';
 import { useRouter } from 'next/router';
 
 export default function DeleteUser() {
-  const API_URL = "http://localhost:3001/api/users/";
+  const API_URL = "http://localhost:3001/api/appointments/";
 
   const [user, setUser] = useState({
     author_id: "",

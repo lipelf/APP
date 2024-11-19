@@ -1,7 +1,7 @@
 import Axios from 'axios'
 import NavAdmin from '@/components/NavAdmin'
 import MenuAdmin from '@/components/MenuAdmin'
-import UserAction from '@/components/UserAction'
+import AppointmentsAction from '@/components/AppointmentsAction'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
@@ -56,7 +56,9 @@ export default function Appointments() {
                 <tr>
                   <th scope="col">#</th>
                   <th scope="col">Data</th>
-                  <th scope="col">Paciente</th>
+                  <th scope="col">Estudante</th>
+                  <th scope="col">Profissional</th>
+                  <th scope="col">Especialidade</th>
                   <th scope="col">Ação</th>
                 </tr>
               </thead>
@@ -65,9 +67,11 @@ export default function Appointments() {
                   <tr key={appointment._id}>
                     <th scope="row">{appointment._id}</th>
                     <td>{appointment.date}</td>
-                    <td>{appointment.patientName}</td>
+                    <td>{appointment.student}</td>
+                    <td>{appointment.professional}</td>
+                    <td>{appointment.specialty}</td>
                     <td>
-                      <UserAction pid={appointment._id}></UserAction>
+                      <AppointmentsAction pid={appointment._id}></AppointmentsAction>
                     </td>
                   </tr>
                 ))}
