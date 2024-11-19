@@ -6,7 +6,7 @@ const { v4: uuidv4 } = require('uuid');
 /**
  * Define o esquema e o modelo do professor
  */
-const teachersSchema = new mongoose.Schema({
+const teacherSchema = new mongoose.Schema({
     id: { type: String, required: true },
     name: { type: String, required: true },
     school_disciplines: { type: String, required: true },
@@ -15,7 +15,7 @@ const teachersSchema = new mongoose.Schema({
     status: { type: String, required: true }
 });
 
-const Teacher = mongoose.model('Teachers', teachersSchema);
+const Teacher = mongoose.model('Teacher', teacherSchema);
 
 /**
  * @swagger
@@ -52,11 +52,11 @@ router.get('/', async (req, res) => {
  */
 router.get('/:id', async (req, res) => {
     try {
-        const teacher = await Teacher.findOne({ id: req.params.id });
+        const teacher = await Teacher.findById(req.params.id); // Usando o _id do MongoDB
         if (!teacher) {
             return res.status(404).json({ erro: 'Professor não encontrado' });
         }
-        res.json(teacher);
+        res.status(200).json(teacher);
     } catch (err) {
         res.status(500).json({ erro: 'Erro ao buscar o professor' });
     }
@@ -104,10 +104,10 @@ router.put('/:id', async (req, res) => {
     const { name, school_disciplines, contact, phone_number, status } = req.body;
 
     try {
-        const updatedTeacher = await Teacher.findOneAndUpdate(
-            { id: req.params.id },
+        const updatedTeacher = await Teacher.findByIdAndUpdate(
+            req.params.id,  // Usando o _id do MongoDB
             { name, school_disciplines, contact, phone_number, status },
-            { new: true, runValidators: true }
+            { new: true, runValidators: true } // Garante que o professor será retornado atualizado
         );
 
         if (!updatedTeacher) {
@@ -129,7 +129,7 @@ router.put('/:id', async (req, res) => {
  */
 router.delete('/:id', async (req, res) => {
     try {
-        const deletedTeacher = await Teacher.findOneAndDelete({ id: req.params.id });
+        const deletedTeacher = await Teacher.findByIdAndDelete(req.params.id);
 
         if (!deletedTeacher) {
             return res.status(404).json({ erro: 'Professor não encontrado' });

@@ -10,12 +10,12 @@ const eventsSchema = new mongoose.Schema({
     id: { type: String, required: true },
     title: { type: String, required: true },
     description: { type: String, required: true },
-    date: { type: Date, required: true },
+    date: { type: Date, default: Date.now },
     location: { type: String, required: true },
     status: { type: String, required: true }
 });
 
-const Event = mongoose.model('Event', eventsSchema);
+const Event = mongoose.model('Events', eventsSchema);
 
 /**
  * @swagger
@@ -36,10 +36,10 @@ const Event = mongoose.model('Event', eventsSchema);
  */
 router.get('/', async (req, res) => {
     try {
-        const events = await Event.find().sort({ title: 1 });
-        res.json(events);
+        const events = await Event.find({});
+        res.status(200).json(events);
     } catch (err) {
-        res.status(500).json({ erro: 'Erro ao buscar eventos' });
+        res.status(500).json({ error: 'Erro ao buscar eventos' });
     }
 });
 
@@ -52,13 +52,13 @@ router.get('/', async (req, res) => {
  */
 router.get('/:id', async (req, res) => {
     try {
-        const event = await Event.findOne({ id: req.params.id });
+        const event = await Event.findById(req.params.id); // Usando o _id do MongoDB
         if (!event) {
-            return res.status(404).json({ erro: 'Evento não encontrado' });
+            return res.status(404).json({ error: 'Evento não encontrado' });
         }
-        res.json(event);
+        res.status(200).json(event);
     } catch (err) {
-        res.status(500).json({ erro: 'Erro ao buscar o evento' });
+        res.status(500).json({ error: 'Erro ao buscar o evento' });
     }
 });
 
@@ -72,8 +72,8 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
     const { title, description, date, location, status } = req.body;
 
-    if (!title || !description || !date || !location || !status) {
-        return res.status(400).json({ erro: 'Todos os campos são obrigatórios' });
+    if (!title || !description || !location || !status) {
+        return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
     }
 
     const newEvent = new Event({
@@ -87,9 +87,9 @@ router.post('/', async (req, res) => {
 
     try {
         await newEvent.save();
-        res.status(200).json({ sucesso: 'Evento cadastrado com sucesso', id: newEvent.id });
+        res.status(200).json({ success: 'Evento cadastrado com sucesso', id: newEvent.id });
     } catch (err) {
-        res.status(500).json({ erro: 'Erro ao salvar o evento' });
+        res.status(500).json({ error: 'Erro ao salvar o evento' });
     }
 });
 
@@ -104,19 +104,21 @@ router.put('/:id', async (req, res) => {
     const { title, description, date, location, status } = req.body;
 
     try {
-        const updatedEvent = await Event.findOneAndUpdate(
-            { id: req.params.id },
-            { title, description, date, location, status },
+        const updateData = { title, description, date, location, status };
+
+        const updatedEvent = await Event.findByIdAndUpdate(
+            req.params.id, // Atualizando pelo _id do MongoDB
+            updateData,
             { new: true, runValidators: true }
         );
 
         if (!updatedEvent) {
-            return res.status(404).json({ erro: 'Evento não encontrado' });
+            return res.status(404).json({ error: 'Evento não encontrado' });
         }
 
-        res.json(updatedEvent);
+        res.status(200).json(updatedEvent);
     } catch (err) {
-        res.status(400).json({ erro: 'Erro ao atualizar o evento' });
+        res.status(400).json({ error: 'Erro ao atualizar o evento' });
     }
 });
 
@@ -129,15 +131,15 @@ router.put('/:id', async (req, res) => {
  */
 router.delete('/:id', async (req, res) => {
     try {
-        const deletedEvent = await Event.findOneAndDelete({ id: req.params.id });
+        const deletedEvent = await Event.findByIdAndDelete(req.params.id);
 
         if (!deletedEvent) {
-            return res.status(404).json({ erro: 'Evento não encontrado' });
+            return res.status(404).json({ error: 'Evento não encontrado' });
         }
 
-        res.json({ mensagem: 'Evento deletado com sucesso.' });
+        res.json({ message: 'Evento deletado com sucesso.' });
     } catch (err) {
-        res.status(500).json({ erro: 'Erro ao deletar o evento' });
+        res.status(500).json({ error: 'Erro ao deletar o evento' });
     }
 });
 

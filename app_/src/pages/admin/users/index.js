@@ -38,37 +38,41 @@
   //         <MenuAdmin />
   //       </div>
 
-  //       <div className="d-flex justify-content-center p-2">
-  //   <div className="container">
-  //     <div className="table-wrapper">
-  //       <div className="row border-bottom">
-  //         <h3>Lista de Usuários</h3>
-  //       </div>
-  //       <table className="table table-hover table-dark">
-  //         <thead>
-  //           <tr>
-  //             <th scope="col">#</th>
-  //             <th scope="col">Nome</th>
-  //             <th scope="col">E-mail</th>
-  //             <th scope="col">Ação</th>
-  //           </tr>
-  //         </thead>
-  //         <tbody>
-  //           {users.map((user) => (
-  //             <tr key={user._id}>
-  //               <th scope="row">{user._id}</th>
-  //               <td>{user.name}</td>
-  //               <td>{user.email}</td>
-  //               <td>
-  //                 <UserAction pid={user._id}></UserAction>
-  //               </td>
-  //             </tr>
-  //           ))}
-  //         </tbody>
-  //       </table>
-  //     </div>
-  //   </div>
-  // </div>
-  //     </>
-  //   );
-  // }
+  
+      <div className="d-flex justify-content-center p-2">
+        <div className="container">
+        <div className="row border-bottom">
+        <h3> Lista de Usuários </h3>
+        
+        <table className="table table-hover table-dark">
+        <thead>
+            <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Nome</th>
+            <th scope="col">E-mail</th>
+            <th scope="col">Ação</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        {users.map( user => (
+            <tr key={user._id}>
+              <th scope="row">{user._id}</th>
+              <td>{user.name}</td>
+              <td>{user.email}</td>
+              <td>
+                <UserAction pid={ user._id }></UserAction>
+              </td>
+            </tr>
+        ))}
+
+        </tbody>
+        </table>
+        </div>
+        </div>
+      </div>  
+  </>
+  )
+}
+
+

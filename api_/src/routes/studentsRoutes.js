@@ -22,7 +22,7 @@ const Student = mongoose.model('Students', studentsSchema);
  * @swagger
  * tags:
  *   name: Students
- *   description: Endpoints relacionados aos estudantes.
+ *   description: Endpoints relacionados aos estudantes
  */
 
 /**
@@ -37,10 +37,10 @@ const Student = mongoose.model('Students', studentsSchema);
  */
 router.get('/', async (req, res) => {
     try {
-        const students = await Student.find().sort({ name: 1 });
-        res.json(students);
-    } catch (err) {
-        res.status(500).json({ erro: 'Erro ao buscar estudantes' });
+        const students = await Student.find({});
+        res.status(200).json(students);
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao buscar estudantes' });
     }
 });
 
@@ -53,13 +53,13 @@ router.get('/', async (req, res) => {
  */
 router.get('/:id', async (req, res) => {
     try {
-        const student = await Student.findOne({ id: req.params.id });
+        const student = await Student.findById(req.params.id); // Usando o _id do MongoDB
         if (!student) {
-            return res.status(404).json({ erro: 'Estudante não encontrado' });
+            return res.status(404).json({ error: 'Estudante não encontrado' });
         }
-        res.json(student);
-    } catch (err) {
-        res.status(500).json({ erro: 'Erro ao buscar o estudante' });
+        res.status(200).json(student);
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao buscar o estudante' });
     }
 });
 
@@ -106,9 +106,11 @@ router.put('/:id', async (req, res) => {
     const { name, age, parents, phone, special, status } = req.body;
 
     try {
-        const updatedStudent = await Student.findOneAndUpdate(
-            { id: req.params.id },
-            { name, age, parents, phone, special, status },
+        const updateData = { name, age, parents, phone, special, status };
+
+        const updatedStudent = await Student.findByIdAndUpdate(
+            req.params.id, // Atualizando pelo _id do MongoDB
+            updateData,
             { new: true, runValidators: true }
         );
 
@@ -131,7 +133,7 @@ router.put('/:id', async (req, res) => {
  */
 router.delete('/:id', async (req, res) => {
     try {
-        const deletedStudent = await Student.findOneAndDelete({ id: req.params.id });
+        const deletedStudent = await Student.findByIdAndDelete(req.params.id);
 
         if (!deletedStudent) {
             return res.status(404).json({ erro: 'Estudante não encontrado' });

@@ -6,18 +6,17 @@ import { useEffect, useState } from 'react';
 import Axios from 'axios';
 import { useRouter } from 'next/router';
 
-export default function DeleteUser() {
-  const API_URL = "http://localhost:3001/api/appointments/";
+export default function UpdateUser() {
+  const API_URL = "http://localhost:3001/api/users/";
 
   const [user, setUser] = useState({
-    author_id: "",
-    author_name: "",
-    author_email: "",
-    author_user: "",
-    author_pwd: "",
-    author_level: "",
-    author_status: "",
-    author_create_date: ""
+    id: "",
+    name: "",
+    email: "",
+    user: "",
+    pwd: "",
+    level: "",
+    status: ""
   });
 
   const router = useRouter();
@@ -33,9 +32,8 @@ export default function DeleteUser() {
   ];
 
   const optionsStatus = [
-    { value: '', text: '-- Selecione um estado --' },
-    { value: 'true', text: 'Ativo' },
-    { value: 'false', text: 'Inativo' },
+    { value: 'on', text: 'Ativo' },
+    { value: 'off', text: 'Inativo' },
   ];
 
   useEffect(() => {
@@ -55,16 +53,31 @@ export default function DeleteUser() {
     }
   }, [pid]);
 
-  const handleDeleteUser = async () => {
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setUser({
+      ...user,
+      [name]: value
+    });
+  };
+
+  const handleUpdateUser = async () => {
     try {
-      const response = await Axios.delete(`${API_URL}${pid}`);
-      setMessage({ message: response.data.message, status: "ok" });
-      router.push('/admin/users'); // Redireciona para a lista de usuários após a deleção
+      console.log(`Updating user with ID: ${pid}`);
+      console.log(`API URL: ${API_URL}${pid}`);
+      console.log(`User data:`, user);
+      const response = await Axios.put(`${API_URL}${pid}`, user);
+      setMessage({ message: "Usuário atualizado com sucesso! ", status: "ok" });
+      setTimeout(() => {
+        router.push('/admin/users');
+      }, 1500); 
+      
     } catch (error) {
-      console.error('Erro ao deletar o usuário:', error);
-      setMessage({ message: "Erro ao deletar o usuário!", status: "error" });
+      console.error('Erro ao alterar o usuário:', error);
+      setMessage({ message: "Erro ao alterar o usuário!", status: "error" });
     }
   };
+
 
   return (
     <>
@@ -77,10 +90,19 @@ export default function DeleteUser() {
         <NavAdmin />
         <MenuAdmin />
         { 
-          message.status === "" ? "" : 
-          message.status === "ok" ? <div className='alert alert-success' role='alert'> { message.message } <Link className='alert-link' href='/admin/users'>Voltar</Link></div> : 
-          <div className='alert alert-danger' role='alert'> { message.message } <Link className='alert-link' href='/admin/users'>Voltar</Link></div>
-        }
+  message.status === "" ? "" : 
+  message.status === "ok" ? (
+    <div className='alert alert-success' role='alert'> 
+      { message.message } 
+      <Link className='alert-link' href='/admin/users'>Voltar</Link>
+    </div>
+  ) : (
+    <div className='alert alert-danger' role='alert'> 
+      { message.message } 
+      <Link className='alert-link' href='/admin/users'>Voltar</Link>
+    </div>
+  )
+}
       </div>
   
       <div className="d-flex justify-content-center p-2">
@@ -91,23 +113,23 @@ export default function DeleteUser() {
                 <form method="POST">
                 <div className="form-group">
                     <label className="form-label" htmlFor="author_name">Nome</label>
-                    <input type="text" id="author_name" name="author_name" className="form-control" value={user.author_name} readOnly/>
+                    <input type="text" id="author_name" name="name" className="form-control" value={user.name} onChange={handleChange}/>
                 </div>
                 <div className="form-group">
                     <label className="form-label" htmlFor="author_email">E-mail</label>
-                    <input type="text" id="author_email" name="author_email" className="form-control" value={user.author_email} readOnly />
+                    <input type="text" id="author_email" name="email" className="form-control" value={user.email} onChange={handleChange} />
                 </div>
                 <div className="form-group">
                     <label className="form-label" htmlFor="author_user">Usuário</label>
-                    <input type="text" id="author_user" name="author_user" className="form-control" value={user.author_user} readOnly />
+                    <input type="text" id="author_user" name="user" className="form-control" value={user.user} onChange={handleChange} />
                 </div>
                 <div className="form-group">
                     <label className="form-label" htmlFor="author_pwd">Senha</label>
-                    <input type="password" id="author_pwd" name="author_pwd" className="form-control" value={user.author_pwd} readOnly />
+                    <input type="password" id="author_pwd" name="pwd" className="form-control" value={user.pwd} onChange={handleChange} />
                 </div>
                 <div className="form-group">
                     <label className="form-label" htmlFor="author_level">Nível</label>
-                    <select className="form-select" id="author_level" name="author_level" value={user.author_level} readOnly>
+                    <select className="form-select" id="author_level" name="level" value={user.level} onChange={handleChange}>
                       {optionsLevel.map(option => (
                         <option key={option.value} value={option.value}>
                           {option.text}
@@ -117,7 +139,7 @@ export default function DeleteUser() {
                 </div>
                 <div className="form-group">
                     <label className="form-label" htmlFor="author_status">Status</label>
-                    <select className="form-select" id="author_status" name="author_status" value={user.author_status} readOnly>
+                    <select className="form-select" id="author_status" name="status" value={user.status} onChange={handleChange}>
                       {optionsStatus.map(option => (
                         <option key={option.value} value={option.value}>
                           {option.text}
@@ -125,12 +147,8 @@ export default function DeleteUser() {
                       ))}
                     </select>
                 </div>
-                <div className="form-group">
-                    <label className="form-label" htmlFor="author_create_date">Data de Criação</label>
-                    <input type="text" id="author_create_date" name="author_create_date" className="form-control" value={ user.author_create_date } readOnly/>
-                </div>
                 <div className="form-group p-2">
-                    <button className="btn btn-outline-danger" type="button" onClick={handleDeleteUser} >Deletar</button>
+                    <button className="btn btn-outline-success" type="button" onClick={handleUpdateUser} >Salvar</button>
                     <Link className="btn btn-outline-info" href="/admin/users">Voltar</Link>
                 </div>
                 </form>

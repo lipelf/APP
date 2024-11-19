@@ -6,24 +6,7 @@ import Head from "next/head";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
-export default function Users() {
-  const API_URL = "http://localhost:3001/api/users";
-
-  const [users, setUsers] = useState([]);
-
-  useEffect(() => {
-    const getAllUsers = async () => {
-      try {
-        const response = await Axios.get(API_URL);
-        setUsers(response.data);
-      } catch (error) {
-        console.error("Erro ao buscar os usuários:", error);
-      }
-    };
-
-    getAllUsers();
-  }, []);
-
+export default function Admin() {
   return (
     <>
       <Head>
@@ -40,38 +23,17 @@ export default function Users() {
       <div className="d-flex justify-content-center p-2">
         <div className="container">
           <div className="row border-bottom">
-            <h3>Lista de Usuários</h3>
-
-            {/* Botão Criar Usuário */}
-            <div className="d-flex justify-content-end mb-3">
-              <Link href="/admin/users/create" className="btn btn-primary">
-                Criar Usuário
-              </Link>
-            </div>
-
-            {/* Tabela de Usuários */}
-            <table className="table table-hover table-dark">
-              <thead>
-                <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Nome</th>
-                  <th scope="col">E-mail</th>
-                  <th scope="col">Ação</th>
-                </tr>
-              </thead>
-              <tbody>
-                {users.map((user) => (
-                  <tr key={user._id}>
-                    <th scope="row">{user._id}</th>
-                    <td>{user.name}</td>
-                    <td>{user.email}</td>
-                    <td>
-                      <UserAction pid={user._id}></UserAction>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+              <h3> Lista de Contas Atrasadas</h3>
+          </div>
+          <div className="row border-bottom">
+              <h3> Lista de Lancaçamentos</h3>
+          </div>
+          <div className="row border-bottom">
+              <h3> Buscador de Lançamentos</h3>
+              <div className="input-group">
+                  <input type="text" className="form-control" placeholder="Palavra-chave" aria-describedby="button-busca" />
+                  <button className="btn btn-outline-secondary" type="button" id="button-busca">Buscar</button>
+              </div>
           </div>
         </div>
       </div>

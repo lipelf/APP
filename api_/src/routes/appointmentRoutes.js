@@ -7,15 +7,14 @@ const { v4: uuidv4 } = require('uuid');
  * Define o esquema e o modelo do agendamento
  */
 const appointmentSchema = new mongoose.Schema({
-    id: { type: String, required: true },
     specialty: { type: String, required: true },
-    comments: { type: String, required: true },
+    comments: { type: String },
     date: { type: Date, required: true },
     student: { type: String, required: true },
-    professional: { type: String, required: true }
-});
+    professional: { type: String, required: true },
+  });
 
-const Appointment = mongoose.model('Appointment', appointmentSchema);
+const Appointment = mongoose.model('Appointments', appointmentSchema);
 
 /**
  * @swagger
@@ -49,17 +48,22 @@ router.get('/', async (req, res) => {
  *     tags: [Appointment]
  *     summary: Retorna um agendamento específico
  */
+// Buscar um Appointment pelo _id
 router.get('/:id', async (req, res) => {
     try {
-        const appointment = await Appointment.findById(req.params.id); // Usando o _id do MongoDB
-        if (!appointment) {
-            return res.status(404).json({ error: 'Agendamento não encontrado' });
-        }
-        res.status(200).json(appointment);
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to fetch user' });
+      const appointment = await Appointment.findById(req.params.id); // Certifique-se de que está buscando por _id
+      if (!appointment) {
+        return res.status(404).json({ error: 'Appointment não encontrado' });
+      }
+      res.status(200).json(appointment);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Erro ao buscar Appointment' });
     }
-});
+  });
+  
+
+
 
 /**
  * @swagger
@@ -103,16 +107,19 @@ router.put('/:id', async (req, res) => {
     const { specialty, comments, date, student, professional } = req.body;
 
     try {
-        const updatedAppointment = await Appointment.findOneAndUpdate(
-            { id: req.params.id },
-            { specialty, comments, date, student, professional },
-            { new: true, runValidators: true }
+        // Procura o agendamento pelo _id do MongoDB
+        const updatedAppointment = await Appointment.findByIdAndUpdate(
+            req.params.id,  // Usando o id da URL para buscar o agendamento
+            { specialty, comments, date, student, professional },  // Atualiza os campos necessários
+            { new: true, runValidators: true }  // Garante que o agendamento será retornado atualizado
         );
 
+        // Caso o agendamento não seja encontrado, retorna erro 404
         if (!updatedAppointment) {
             return res.status(404).json({ erro: 'Agendamento não encontrado' });
         }
 
+        // Retorna o agendamento atualizado
         res.json(updatedAppointment);
     } catch (err) {
         res.status(400).json({ erro: 'Erro ao atualizar o agendamento' });

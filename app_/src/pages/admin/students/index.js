@@ -1,28 +1,29 @@
 import Axios from 'axios'
 import NavAdmin from '@/components/NavAdmin'
-import MenuAdmin from '@/components/MenuAdmin'
-import AppointmentsAction from '@/components/AppointmentsAction'
+import StudentAction from '@/components/StudentAction'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import MenuAdmin from '@/components/MenuAdmin'
 
-export default function Appointments() {
 
-  const API_URL = "http://localhost:3001/api/appointments"
+export default function users() {
+
+  const API_URL = "http://localhost:3001/api/students"
   
-  const [appointments, setAppointments] = useState([]); 
+  const [student, setStudents] = useState([]); 
   
   useEffect(() => {
-    const getAllAppointments = async () => {
+    const getAllStudents = async () => {
       try {
         const response = await Axios.get(API_URL);
-        setAppointments(response.data);
+        setStudents(response.data);
       } catch (error) {
-        console.error('Erro ao buscar os compromissos:', error);
+        console.error('Erro ao buscar os usuários:', error);
       }
     };
 
-    getAllAppointments();
+    getAllStudents();
 
   }, []);
 
@@ -38,29 +39,30 @@ export default function Appointments() {
         <MenuAdmin />
       </div>
 
+  
       <div className="d-flex justify-content-center p-2">
         <div className="container">
         <div className="row border-bottom">
-        <h3> Lista de Appointments </h3>
+        <h3> Lista de estudantes </h3>
         
-        <table className="table table-hover">
+        <table className="table table-hover table-dark">
         <thead>
             <tr>
             <th scope="col">ID</th>
-            <th scope="col"></th>
-            <th scope="col"></th>
+            <th scope="col">Nome</th>
+            <th scope="col">Idade</th>
             <th scope="col">Ação</th>
             </tr>
         </thead>
         <tbody>
 
-        {appointments.map( appointment => (
-            <tr key={appointment._id}>
-              <th scope="row">{appointment._id}</th>
-              <td>{appointment.name}</td>
-              <td>{appointment.email}</td>
+        {student.map( students => (
+            <tr key={students._id}>
+              <th scope="row">{students._id}</th>
+              <td>{students.name}</td>
+              <td>{students.age}</td>
               <td>
-                <AppointmentsAction pid={ appointment._id }></AppointmentsAction>
+                <StudentAction pid={ students._id }></StudentAction>
               </td>
             </tr>
         ))}
@@ -70,8 +72,8 @@ export default function Appointments() {
         </div>
         </div>
       </div>  
-    </>
-  );
+  </>
+  )
 }
 
 
