@@ -1,8 +1,15 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
-import connectDB from '@/utils/db';
-import LoginUsuarios from '@/models/LoginUsuarios';
+
+const users = [
+  {
+    id: 1,
+    name: 'John Doe',
+    email: 'john@example.com',
+    password: bcrypt.hashSync('password123', 10),
+  },
+];
 
 export default NextAuth({
   providers: [
@@ -13,18 +20,16 @@ export default NextAuth({
         password: { label: 'Password', type: 'password' },
       },
       authorize: async (credentials) => {
-        await connectDB(); // Conecta ao banco de dados
-        const user = await LoginUsuarios.findOne({ email: credentials.email });
-
+        const user = users.find((user) => user.email === credentials.email);
         if (user && bcrypt.compareSync(credentials.password, user.password)) {
-          return { id: user._id, name: user.name, email: user.email };
+          return { id: user.id, name: user.name, email: user.email }; // Retorne o usuário se autenticar corretamente
         }
-        return null; // Retorna null se a autenticação falhar
+        return null; // Retorne null se não encontrar o usuário ou falhar na autenticação
       },
     }),
   ],
   pages: {
-    signIn: '/login', // Página de login personalizada
+    signIn: '/login', // Redireciona para a página de login
   },
   session: {
     jwt: true,
