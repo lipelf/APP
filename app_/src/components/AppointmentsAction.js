@@ -1,11 +1,31 @@
-import Link from "next/link";
+import Axios from "axios";
 
-export default function AppointmentsAction(props) {
-    return (
-        <>
-            <Link className="btn btn-outline-success btn-sm me-2" href={`/admin/appointments/read/${ props.pid }`}>Visualizar</Link>
-            <Link className="btn btn-outline-primary btn-sm me-2" href={`/admin/appointments/update/${ props.pid }`}>Editar</Link>
-            <Link className="btn btn-outline-danger btn-sm" href={`/admin/appointments/delete/${ props.pid }`}>Deletar</Link>
-        </>
-    )
+export default function AppointmentsAction({ pid }) {
+  const API_URL = `http://localhost:3001/api/appointments/${pid}`;
+
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm("Tem certeza de que deseja deletar este compromisso?");
+    if (confirmDelete) {
+      try {
+        await Axios.delete(API_URL);
+        alert("Compromisso deletado com sucesso!");
+
+        // Opcional: Atualiza a página ou dispara um evento para o componente pai
+        window.location.reload(); // Recarrega a página
+      } catch (error) {
+        console.error("Erro ao deletar o compromisso:", error);
+        alert("Erro ao deletar o compromisso. Tente novamente.");
+      }
+    }
+  };
+
+  return (
+    <>
+      <a className="btn btn-outline-success btn-sm me-2" href={`/admin/appointments/read/${pid}`}>Visualizar</a>
+      <a className="btn btn-outline-primary btn-sm me-2" href={`/admin/appointments/update/${pid}`}>Editar</a>
+      <button className="btn btn-outline-danger btn-sm" onClick={handleDelete}>
+        Deletar
+      </button>
+    </>
+  );
 }

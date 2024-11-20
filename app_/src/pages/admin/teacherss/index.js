@@ -2,39 +2,39 @@ import { getSession } from 'next-auth/react';
 import Axios from 'axios'
 import NavAdmin from '@/components/NavAdmin'
 import MenuAdmin from '@/components/MenuAdmin'
-import AppointmentsAction from '@/components/AppointmentsAction'
+import TeachersAction from '@/components/TeachersAction'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 
-export default function Appointments() {
-  const API_URL = "http://localhost:3001/api/appointments";
+export default function Teachers() {
+  const API_URL = "http://localhost:3001/api/teachers";
 
-  const [appointment, setAppointment] = useState([]);
-  const [filteredAppointments, setFilteredAppointments] = useState([]);
+  const [teacher, setTeacher] = useState([]);
+  const [filteredTeachers, setFilteredTeachers] = useState([]);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    const getAllAppointments = async () => {
+    const getAllTeachers = async () => {
       try {
         const response = await Axios.get(API_URL);
-        setAppointment(response.data);
-        setFilteredAppointments(response.data);
+        setTeacher(response.data);
+        setFilteredTeachers(response.data);
       } catch (error) {
         console.error("Erro ao buscar os compromissos:", error);
       }
     };
 
-    getAllAppointments();
+    getAllTeachers();
   }, []);
 
   const handleSearch = (e) => {
     const term = e.target.value.toLowerCase();
     setSearch(term);
-    const filtered = appointment.filter((appointment) => 
-      appointment.date.toLowerCase().includes(term) // Filtro pela data também
+    const filtered = teacher.filter((teacher) => 
+      teacher.name.toLowerCase().includes(term) // Filtro pela data também
     );
-    setFilteredAppointments(filtered);
+    setFilteredTeachers(filtered);
   };
 
   return (
@@ -64,7 +64,7 @@ export default function Appointments() {
                 value={search}
                 onChange={handleSearch}
               />
-              <Link href="/admin/appointments/create" className="btn btn-primary ms-2">
+              <Link href="/admin/teachers/create" className="btn btn-primary ms-2">
                 Criar Compromisso
               </Link>
             </div>
@@ -74,26 +74,26 @@ export default function Appointments() {
               <thead>
                 <tr>
                   <th scope="col">#</th>
-                  <th scope="col">Data</th>
+                  <th scope="col">Nome</th>
                   <th scope="col">Estudante</th>
                   <th scope="col">Ação</th>
                 </tr>
               </thead>
               <tbody>
-                {filteredAppointments.map(appointment => (
-                  <tr key={appointment._id}>
-                    <th scope="row">{appointment._id}</th>
-                    <td>{appointment.date}</td>
-                    <td>{appointment.student}</td>
+                {filteredTeachers.map(teacher => (
+                  <tr key={teacher._id}>
+                    <th scope="row">{teacher._id}</th>
+                    <td>{teacher.name}</td>
+                    <td>{teacher.student}</td>
                     <td>
-                      <AppointmentsAction pid={appointment._id} />
+                      <TeachersAction pid={teacher._id} />
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
 
-            {filteredAppointments.length === 0 && (
+            {filteredTeachers.length === 0 && (
               <p className="text-center text-light">Nenhum compromisso encontrado.</p>
             )}
 

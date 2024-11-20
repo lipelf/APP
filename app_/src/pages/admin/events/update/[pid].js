@@ -13,7 +13,7 @@ export default function UpdateEvent() {
   const [event, setEvent] = useState({
     title: "",
     description: "",
-    location: "",
+    comments: "",
     status: "",
   });
 
@@ -57,7 +57,7 @@ export default function UpdateEvent() {
       const cleanEvent = {
         title: event.title,
         description: event.description,
-        location: event.location,
+        comments: event.comments,
         status: event.status
       };
   
@@ -131,13 +131,13 @@ export default function UpdateEvent() {
                 />
               </div>
               <div className="form-group">
-                <label className="form-label" htmlFor="event_location">Localização</label>
+                <label className="form-label" htmlFor="event_comments">Comentário</label>
                 <input 
                   type="text" 
-                  id="event_location" 
-                  name="location" 
+                  id="event_comments" 
+                  name="comments" 
                   className="form-control" 
-                  value={event.location} 
+                  value={event.comments} 
                   onChange={handleChange} 
                 />
               </div>

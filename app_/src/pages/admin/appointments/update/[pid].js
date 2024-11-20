@@ -78,7 +78,7 @@ export default function UpdateAppointment() {
       </Head>
       <div>
         <NavAdmin />
-        <MenuUsers />
+        <MenuAdmin />
         { 
           message.status === "" ? "" : 
           message.status === "ok" ? <div className='alert alert-success' role='alert'> { message.message } <Link className='alert-link' href='/admin/users'>Voltar</Link></div> : 
