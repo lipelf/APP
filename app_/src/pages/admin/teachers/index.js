@@ -53,7 +53,7 @@ export default function Teachers() {
       <div className="d-flex justify-content-center p-2">
         <div className="container">
           <div className="row border-bottom">
-            <h3>Lista de Compromissos</h3>
+            <h3>Lista de Professores</h3>
 
             {/* Campo de busca e botão de criar compromisso */}
             <div className="d-flex justify-content-between align-items-center mb-3">
@@ -65,7 +65,7 @@ export default function Teachers() {
                 onChange={handleSearch}
               />
               <Link href="/admin/teachers/create" className="btn btn-primary ms-2">
-                Criar Compromisso
+                Criar Professor
               </Link>
             </div>
 
@@ -75,7 +75,7 @@ export default function Teachers() {
                 <tr>
                   <th scope="col">#</th>
                   <th scope="col">Nome</th>
-                  <th scope="col">Estudante</th>
+                  <th scope="col">Disciplina Responsável</th>
                   <th scope="col">Ação</th>
                 </tr>
               </thead>
@@ -84,7 +84,7 @@ export default function Teachers() {
                   <tr key={teacher._id}>
                     <th scope="row">{teacher._id}</th>
                     <td>{teacher.name}</td>
-                    <td>{teacher.student}</td>
+                    <td>{teacher.school_disciplines}</td>
                     <td>
                       <TeachersAction pid={teacher._id} />
                     </td>
