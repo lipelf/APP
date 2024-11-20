@@ -70,7 +70,7 @@ export default function UpdateUser() {
       const response = await Axios.put(`${API_URL}${pid}`, user);
       setMessage({ message: "Usuário atualizado com sucesso! ", status: "ok" });
       setTimeout(() => {
-        router.push('/admin/users');
+        router.push('/admin');
       }, 1500); 
       
     } catch (error) {
@@ -95,12 +95,12 @@ export default function UpdateUser() {
   message.status === "ok" ? (
     <div className='alert alert-success' role='alert'> 
       { message.message } 
-      <Link className='alert-link' href='/admin/users'>Voltar</Link>
+      <Link className='alert-link' href='/admin'>Voltar</Link>
     </div>
   ) : (
     <div className='alert alert-danger' role='alert'> 
       { message.message } 
-      <Link className='alert-link' href='/admin/users'>Voltar</Link>
+      <Link className='alert-link' href='/admin'>Voltar</Link>
     </div>
   )
 }
@@ -150,7 +150,7 @@ export default function UpdateUser() {
                 </div>
                 <div className="form-group p-2">
                     <button className="btn btn-outline-success" type="button" onClick={handleUpdateUser} >Salvar</button>
-                    <Link className="btn btn-outline-info" href="/admin/users">Voltar</Link>
+                    <Link className="btn btn-outline-info" href="/admin">Voltar</Link>
                 </div>
                 </form>
             </div>

@@ -111,6 +111,13 @@ body {
   padding-top: 0 !important;
 }
 
+.text-truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px; /* Ajuste conforme necessário */
+}
+
 .container {
   margin-left: 180px; /* Espaço para o menu lateral */
   padding: 20px;

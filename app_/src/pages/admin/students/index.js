@@ -69,20 +69,16 @@ export default function Students() {
           <div className="row border-bottom">
             <h3>Lista de estudantes</h3>
 
-            {/* Campo de Busca */}
-            <div className="mb-3">
+            {/* Campo de busca e botão de criar compromisso */}
+            <div className="d-flex justify-content-between align-items-center mb-3">
               <input
                 type="text"
                 placeholder="Buscar por Nome..."
-                className="form-control"
+                className="form-control w-50"
                 value={search}
                 onChange={handleSearch}
               />
-            </div>
-
-            {/* Botão Criar Usuário */}
-            <div className="d-flex justify-content-end mb-3">
-              <Link href="/admin/students/create" className="btn btn-primary">
+              <Link href="/admin/students/create" className="btn btn-primary ms-2">
                 Criar Estudante
               </Link>
             </div>
@@ -103,10 +99,10 @@ export default function Students() {
                 {filteredstudents.map((student) => (
                   <tr key={student._id}>
                     <th scope="row">{student._id}</th>
-                    <td>{student.name}</td>
-                    <td>{student.age}</td>
-                    <td>{student.parents}</td>
-                    <td>{student.phone}</td>
+                    <td className="text-truncate">{student.name}</td>
+                    <td className="text-truncate">{student.age}</td>
+                    <td className="text-truncate">{student.parents}</td>
+                    <td className="text-truncate">{student.phone}</td>
                     <td>
                       <a
                         className="btn btn-outline-success btn-sm me-2"

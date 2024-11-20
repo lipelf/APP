@@ -68,12 +68,6 @@ export default function Login() {
             <button type="submit" className="btn btn-primary w-100">Entrar</button>
           </form>
           <div className="text-center mt-3">
-            <small>
-              Esqueceu sua senha?{' '}
-              <Link href="/reset-password" className="text-decoration-none text-info">
-                Recuperar
-              </Link>
-            </small>
           </div>
         </div>
       </div>

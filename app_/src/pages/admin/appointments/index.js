@@ -83,8 +83,8 @@ export default function Appointments() {
                 {filteredAppointments.map(appointment => (
                   <tr key={appointment._id}>
                     <th scope="row">{appointment._id}</th>
-                    <td>{appointment.date}</td>
-                    <td>{appointment.student}</td>
+                    <td className="text-truncate">{appointment.date}</td>
+                    <td className="text-truncate">{appointment.student}</td>
                     <td>
                       <AppointmentsAction pid={appointment._id} />
                     </td>

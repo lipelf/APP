@@ -83,8 +83,8 @@ export default function Teachers() {
                 {filteredTeachers.map(teacher => (
                   <tr key={teacher._id}>
                     <th scope="row">{teacher._id}</th>
-                    <td>{teacher.name}</td>
-                    <td>{teacher.school_disciplines}</td>
+                    <td className="text-truncate">{teacher.name}</td>
+                    <td className="text-truncate">{teacher.school_disciplines}</td>
                     <td>
                       <TeachersAction pid={teacher._id} />
                     </td>

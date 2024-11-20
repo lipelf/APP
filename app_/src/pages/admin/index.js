@@ -70,17 +70,17 @@ export default function Users() {
             <h3>Lista de Usuários</h3>
 
             <div className="d-flex justify-content-between align-items-center mb-3">
-  <input
-    type="text"
-    placeholder="Buscar por nome..."
-    className="form-control w-50"
-    value={search}
-    onChange={handleSearch}
-  />
-  <Link href="/admin/users/create" className="btn btn-primary ms-2">
-    Criar Usuário
-  </Link>
-</div>
+              <input
+                type="text"
+                placeholder="Buscar por nome..."
+                className="form-control w-50"
+                value={search}
+                onChange={handleSearch}
+              />
+              <Link href="/admin/users/create" className="btn btn-primary ms-2">
+                Criar Usuário
+              </Link>
+            </div>
 
             {/* Tabela de Usuários */}
             <table className="table table-hover table-dark">
@@ -96,8 +96,8 @@ export default function Users() {
                 {filteredUsers.map((user) => (
                   <tr key={user._id}>
                     <th scope="row">{user._id}</th>
-                    <td>{user.name}</td>
-                    <td>{user.email}</td>
+                    <td className="text-truncate">{user.name}</td>
+                    <td className="text-truncate">{user.email}</td>
                     <td>
                       <a
                         className="btn btn-outline-success btn-sm me-2"
@@ -121,6 +121,7 @@ export default function Users() {
                   </tr>
                 ))}
               </tbody>
+
             </table>
 
             {filteredUsers.length === 0 && (

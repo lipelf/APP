@@ -65,8 +65,8 @@ export default function CreateUser() {
         <MenuAdmin />
         { 
           message.status === "" ? "" : 
-          message.status === "ok" ? <div className='alert alert-success' role='alert'> { message.message } <Link className='alert-link' href='/admin/users'>Voltar</Link></div> : 
-          <div className='alert alert-danger' role='alert'> { message.message } <Link className='alert-link' href='/admin/users'>Voltar</Link></div>
+          message.status === "ok" ? <div className='alert alert-success' role='alert'> { message.message } <Link className='alert-link' href='/admin'>Voltar</Link></div> : 
+          <div className='alert alert-danger' role='alert'> { message.message } <Link className='alert-link' href='/admin'>Voltar</Link></div>
         }
       </div>
   
@@ -114,7 +114,7 @@ export default function CreateUser() {
                 </div>
                 <div className="form-group p-2">
                     <button className="btn btn-outline-success" type="button" onClick={handleCreateUser}>Salvar</button>
-                    <Link className="btn btn-outline-info" href="/admin/users">Voltar</Link>
+                    <Link className="btn btn-outline-info" href="/admin">Voltar</Link>
                 </div>
                 </form>
             </div>

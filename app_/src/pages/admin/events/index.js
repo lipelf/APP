@@ -69,20 +69,16 @@ export default function Events() {
           <div className="row border-bottom">
             <h3>Lista de Eventos</h3>
 
-            {/* Campo de Busca */}
-            <div className="mb-3">
+            {/* Campo de busca e botão de criar compromisso */}
+            <div className="d-flex justify-content-between align-items-center mb-3">
               <input
                 type="text"
                 placeholder="Buscar por Descrição..."
-                className="form-control"
+                className="form-control w-50"
                 value={search}
                 onChange={handleSearch}
               />
-            </div>
-
-            {/* Botão Criar Usuário */}
-            <div className="d-flex justify-content-end mb-3">
-              <Link href="/admin/events/create" className="btn btn-primary">
+              <Link href="/admin/events/create" className="btn btn-primary ms-2">
                 Criar Evento
               </Link>
             </div>
@@ -102,9 +98,9 @@ export default function Events() {
                 {filteredEvents.map((event) => (
                   <tr key={event._id}>
                     <th scope="row">{event._id}</th>
-                    <td>{event.description}</td>
-                    <td>{event.comments}</td>
-                    <td>{event.date}</td>
+                    <td className="text-truncate">{event.description}</td>
+                    <td className="text-truncate">{event.comments}</td>
+                    <td className="text-truncate">{event.date}</td>
                     <td>
                       <a
                         className="btn btn-outline-success btn-sm me-2"

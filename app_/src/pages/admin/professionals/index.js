@@ -68,20 +68,16 @@ export default function Professional() {
           <div className="row border-bottom">
             <h3>Lista de Profissionais </h3>
 
-            {/* Campo de Busca */}
-            <div className="mb-3">
+            {/* Campo de busca e botão de criar compromisso */}
+            <div className="d-flex justify-content-between align-items-center mb-3">
               <input
                 type="text"
                 placeholder="Buscar por id..."
-                className="form-control"
+                className="form-control w-50"
                 value={search}
                 onChange={handleSearch}
               />
-            </div>
-
-            {/* Botão Criar Usuário */}
-            <div className="d-flex justify-content-end mb-3">
-              <Link href="/admin/professionals/create" className="btn btn-primary">
+              <Link href="/admin/professionals/create" className="btn btn-primary ms-2">
                 Criar Profissional
               </Link>
             </div>
@@ -101,9 +97,9 @@ export default function Professional() {
                 {filteredProfessional.map((professional) => (
                   <tr key={professional._id}>
                     <th scope="row">{professional._id}</th>
-                    <td>{professional.name}</td>
-                    <td>{professional.specialty}</td>
-                    <td>{professional.phone_number}</td>
+                    <td className="text-truncate">{professional.name}</td>
+                    <td className="text-truncate">{professional.specialty}</td>
+                    <td className="text-truncate">{professional.phone_number}</td>
                     <td>
                       <a
                         className="btn btn-outline-success btn-sm me-2"

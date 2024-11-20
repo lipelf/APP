@@ -67,7 +67,7 @@ export default function ReadUser() {
         { 
           message.status === "" ? "" : 
           message.status === "ok" ? "" : 
-          <div className='alert alert-danger' role='alert'> { message.message } <Link className='alert-link' href='/admin/users'>Voltar</Link></div>
+          <div className='alert alert-danger' role='alert'> { message.message } <Link className='alert-link' href='/admin'>Voltar</Link></div>
         }
       </div>
   
@@ -114,7 +114,7 @@ export default function ReadUser() {
                     </select>
                 </div>
                 <div className="form-group p-2">
-                    <Link className="btn btn-outline-info" href="/admin/users">Voltar</Link>
+                    <Link className="btn btn-outline-info" href="/admin">Voltar</Link>
                 </div>
                 </form>
             </div>
