@@ -22,9 +22,6 @@ export default function MenuAdmin() {
         <li>
           <Link href="/admin/professionals">Professionals</Link>
         </li>
-        <li>
-          <Link href="/admin/settings">Configurações</Link>
-        </li>
       </ul>
     </div>
     </div>
