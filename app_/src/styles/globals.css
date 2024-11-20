@@ -93,6 +93,10 @@ body {
   padding-top: 60px; /* Espaço para o header */
 }
 
+.no-header {
+  padding-top: 0 !important;
+}
+
 .container {
   margin-left: 180px; /* Espaço para o menu lateral */
   padding: 20px;

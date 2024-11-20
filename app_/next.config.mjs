@@ -1,6 +1,6 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+export default {
   reactStrictMode: true,
+  experimental: {
+    middlewarePrefetch: true,
+  },
 };
-
-export default nextConfig;

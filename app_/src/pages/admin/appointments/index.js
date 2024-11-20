@@ -1,3 +1,4 @@
+import { getSession } from 'next-auth/react';
 import Axios from 'axios'
 import NavAdmin from '@/components/NavAdmin'
 import MenuAdmin from '@/components/MenuAdmin'
@@ -11,12 +12,15 @@ export default function Appointments() {
   const API_URL = "http://localhost:3001/api/appointments"
   
   const [appointments, setAppointments] = useState([]); 
-  
+  const [filteredAppointments, setFilteredAppointments] = useState([]);
+  const [search, setSearch] = useState("");
+
   useEffect(() => {
     const getAllAppointments = async () => {
       try {
         const response = await Axios.get(API_URL);
         setAppointments(response.data);
+        setFilteredAppointments(response.data);
       } catch (error) {
         console.error('Erro ao buscar os compromissos:', error);
       }
@@ -25,6 +29,16 @@ export default function Appointments() {
     getAllAppointments();
 
   }, []);
+
+  const handleSearch = (e) => {
+    const term = e.target.value.toLowerCase();
+    setSearch(term);
+    const filtered = appointments.filter((appointment) => 
+      appointment.patientName.toLowerCase().includes(term) ||
+      appointment.date.toLowerCase().includes(term) // Filtro pela data também
+    );
+    setFilteredAppointments(filtered);
+  };
 
   return (
     <>
@@ -40,38 +54,74 @@ export default function Appointments() {
 
       <div className="d-flex justify-content-center p-2">
         <div className="container">
-        <div className="row border-bottom">
-        <h3> Lista de Appointments </h3>
-        
-        <table className="table table-hover">
-        <thead>
-            <tr>
-            <th scope="col">ID</th>
-            <th scope="col"></th>
-            <th scope="col"></th>
-            <th scope="col">Ação</th>
-            </tr>
-        </thead>
-        <tbody>
+          <div className="row border-bottom">
+            <h3>Lista de Compromissos</h3>
 
-        {appointments.map( appointment => (
-            <tr key={appointment._id}>
-              <th scope="row">{appointment._id}</th>
-              <td>{appointment.name}</td>
-              <td>{appointment.email}</td>
-              <td>
-                <AppointmentsAction pid={ appointment._id }></AppointmentsAction>
-              </td>
-            </tr>
-        ))}
+            {/* Campo de busca e botão de criar compromisso */}
+            <div className="d-flex justify-content-between align-items-center mb-3">
+              <input
+                type="text"
+                placeholder="Buscar por paciente ou data..."
+                className="form-control w-50"
+                value={search}
+                onChange={handleSearch}
+              />
+              <Link href="/admin/appointments/create" className="btn btn-primary ms-2">
+                Criar Compromisso
+              </Link>
+            </div>
 
-        </tbody>
-        </table>
-        </div>
+            {/* Tabela de Compromissos */}
+            <table className="table table-hover table-dark">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Data</th>
+                  <th scope="col">Paciente</th>
+                  <th scope="col">Ação</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredAppointments.map(appointment => (
+                  <tr key={appointment._id}>
+                    <th scope="row">{appointment._id}</th>
+                    <td>{appointment.date}</td>
+                    <td>{appointment.patientName}</td>
+                    <td>
+                      <AppointmentsAction pid={appointment._id} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            {filteredAppointments.length === 0 && (
+              <p className="text-center text-light">Nenhum compromisso encontrado.</p>
+            )}
+
+          </div>
         </div>
       </div>  
     </>
   );
 }
 
+// Adicionando a verificação de sessão no getServerSideProps
+export async function getServerSideProps(context) {
+  const session = await getSession({ req: context.req });
 
+  // Verifica se o usuário está logado, caso contrário, redireciona
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/login',  // Redireciona para a página de login
+        permanent: false,
+      },
+    };
+  }
+
+  // Retorna os dados da página, caso o usuário esteja logado
+  return {
+    props: { session }, // Passa a sessão como prop
+  };
+}

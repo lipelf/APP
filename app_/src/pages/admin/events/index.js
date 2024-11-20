@@ -1,3 +1,4 @@
+import { getSession } from 'next-auth/react';
 import Axios from 'axios';
 import NavAdmin from '@/components/NavAdmin';
 import EventsAction from '@/components/EventsAction'; 
@@ -5,6 +6,7 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import MenuAdmin from '@/components/MenuAdmin'; 
+
 
 export default function Events() { 
   const API_URL = "http://localhost:3001/api/events"; 
@@ -76,4 +78,24 @@ export default function Events() {
       </div>  
     </>
   );
+}
+
+// Adicionando a verificação de sessão no getServerSideProps
+export async function getServerSideProps(context) {
+  const session = await getSession({ req: context.req });
+
+  // Verifica se o usuário está logado, caso contrário, redireciona
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/login',  // Redireciona para a página de login
+        permanent: false,
+      },
+    };
+  }
+
+  // Retorna os dados da página, caso o usuário esteja logado
+  return {
+    props: { session }, // Passa a sessão como prop
+  };
 }

@@ -1,4 +1,4 @@
-
+import { getSession } from 'next-auth/react';
 import Axios from "axios";
 import NavAdmin from "@/components/NavAdmin";
 import MenuAdmin from "@/components/MenuAdmin";
@@ -69,23 +69,18 @@ export default function Users() {
           <div className="row border-bottom">
             <h3>Lista de Usuários</h3>
 
-            {/* Campo de Busca */}
-            <div className="mb-3">
-              <input
-                type="text"
-                placeholder="Buscar por nome..."
-                className="form-control"
-                value={search}
-                onChange={handleSearch}
-              />
-            </div>
-
-            {/* Botão Criar Usuário */}
-            <div className="d-flex justify-content-end mb-3">
-              <Link href="/admin/users/create" className="btn btn-primary">
-                Criar Usuário
-              </Link>
-            </div>
+            <div className="d-flex justify-content-between align-items-center mb-3">
+  <input
+    type="text"
+    placeholder="Buscar por nome..."
+    className="form-control w-50"
+    value={search}
+    onChange={handleSearch}
+  />
+  <Link href="/admin/users/create" className="btn btn-primary ms-2">
+    Criar Usuário
+  </Link>
+</div>
 
             {/* Tabela de Usuários */}
             <table className="table table-hover table-dark">
@@ -136,4 +131,24 @@ export default function Users() {
       </div>
     </>
   );
+}
+
+// Adicionando a verificação de sessão no getServerSideProps
+export async function getServerSideProps(context) {
+  const session = await getSession({ req: context.req });
+
+  // Verifica se o usuário está logado, caso contrário, redireciona
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/login',  // Redireciona para a página de login
+        permanent: false,
+      },
+    };
+  }
+
+  // Retorna os dados da página, caso o usuário esteja logado
+  return {
+    props: { session }, // Passa a sessão como prop
+  };
 }
