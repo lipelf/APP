@@ -12,7 +12,7 @@ export default function CreateEvent() {
   const [event, setEvent] = useState({
     title: "",
     description: "",
-    location: "",
+    comments: "",
   });
 
   const [message, setMessage] = useState({ message: "", status: "" });
@@ -27,7 +27,7 @@ export default function CreateEvent() {
 
   const handleCreateEvent = async () => {
     // Verificar se todos os campos obrigatórios estão preenchidos
-    if (!event.title || !event.description || !event.location) {
+    if (!event.title || !event.description || !event.comments) {
       setMessage({ message: "Todos os campos são obrigatórios", status: "error" });
       return;
     }
@@ -93,13 +93,13 @@ export default function CreateEvent() {
                 />
               </div>
               <div className="form-group">
-                <label className="form-label" htmlFor="location">Local</label>
+                <label className="form-label" htmlFor="comments">Comentário</label>
                 <input 
                   type="text" 
-                  id="location" 
-                  name="location" 
+                  id="comments" 
+                  name="comments" 
                   className="form-control" 
-                  value={event.location} 
+                  value={event.comments} 
                   onChange={handleChange} 
                 />
               </div>

@@ -1,11 +1,31 @@
-import Link from "next/link";
+import Axios from "axios";
 
-export default function TeachersAction(props) {
-    return (
-        <>
-            <Link className="btn btn-outline-success btn-sm me-2" href={`/admin/teachers/read/${ props.pid }`}>Visualizar</Link>
-            <Link className="btn btn-outline-primary btn-sm me-2" href={`/admin/teachers/update/${ props.pid }`}>Editar</Link>
-            <Link className="btn btn-outline-danger btn-sm" href={`/admin/teachers/delete/${ props.pid }`}>Deletar</Link>
-        </>
-    )
+export default function TeachersAction({ pid }) {
+  const API_URL = `http://localhost:3001/api/teachers/${pid}`;
+
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm("Tem certeza de que deseja deletar este professor?");
+    if (confirmDelete) {
+      try {
+        await Axios.delete(API_URL);
+        alert("Professor deletado com sucesso!");
+
+        // Opcional: Atualiza a página ou dispara um evento para o componente pai
+        window.location.reload(); // Recarrega a página
+      } catch (error) {
+        console.error("Erro ao deletar o professor:", error);
+        alert("Erro ao deletar o professor. Tente novamente.");
+      }
+    }
+  };
+
+  return (
+    <>
+      <a className="btn btn-outline-success btn-sm me-2" href={`/admin/teachers/read/${pid}`}>Visualizar</a>
+      <a className="btn btn-outline-primary btn-sm me-2" href={`/admin/teachers/update/${pid}`}>Editar</a>
+      <button className="btn btn-outline-danger btn-sm" onClick={handleDelete}>
+        Deletar
+      </button>
+    </>
+  );
 }

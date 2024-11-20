@@ -1,38 +1,37 @@
-import { getSession } from 'next-auth/react';
-import Axios from 'axios'
-import NavAdmin from '@/components/NavAdmin'
-import StudentAction from '@/components/StudentAction'
-import Head from 'next/head'
-import { useEffect, useState } from 'react'
-import Link from 'next/link'
-import MenuAdmin from '@/components/MenuAdmin'
+import Axios from "axios";
+import NavAdmin from "@/components/NavAdmin";
+import MenuAdmin from "@/components/MenuAdmin";
+import ProfessionalsAction from "@/components/ProfessionalsAction";
+import Head from "next/head";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 
-export default function Students() {
-  const API_URL = "http://localhost:3001/api/students";
+export default function Professional() {
+  const API_URL = "http://localhost:3001/api/professionals";
 
-  const [student, setStudent] = useState([]);
-  const [filteredstudents, setFilteredStudents] = useState([]);
+  const [professional, setProfessional] = useState([]);
+  const [filteredProfessional, setFilteredProfessional] = useState([]);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    const getAllstudents = async () => {
+    const getAllProfessional = async () => {
       try {
         const response = await Axios.get(API_URL);
-        setStudent(response.data);
-        setFilteredStudents(response.data);
+        setProfessional(response.data);
+        setFilteredProfessional(response.data);
       } catch (error) {
         console.error("Erro ao buscar os compromissos:", error);
       }
     };
 
-    getAllstudents();
+    getAllProfessional();
   }, []);
 
   const handleSearch = (e) => {
     const term = e.target.value.toLowerCase();
     setSearch(term);
-    const filtered = student.filter((student) => student.name.toLowerCase().includes(term));
-    setFilteredStudents(filtered);
+    const filtered = professional.filter((professional) => professional._id.toLowerCase().includes(term));
+    setFilteredProfessional(filtered);
   };
 
   const handleDelete = async (id) => {
@@ -42,8 +41,8 @@ export default function Students() {
         await Axios.delete(`${API_URL}/${id}`);
         alert("Compromisso deletado com sucesso!");
         // Remove o usuário deletado da lista exibida
-        setStudent(student.filter((student) => student._id !== id));
-        setFilteredStudents(filteredstudents.filter((student) => student._id !== id));
+        setProfessional(professional.filter((professional) => professional._id !== id));
+        setFilteredProfessional(filteredProfessional.filter((professional) => professional._id !== id));
       } catch (error) {
         console.error("Erro ao deletar o compromisso:", error);
         alert("Erro ao deletar o compromisso. Tente novamente.");
@@ -67,13 +66,13 @@ export default function Students() {
       <div className="d-flex justify-content-center p-2">
         <div className="container">
           <div className="row border-bottom">
-            <h3>Lista de estudantes</h3>
+            <h3>Lista de Profissionais </h3>
 
             {/* Campo de Busca */}
             <div className="mb-3">
               <input
                 type="text"
-                placeholder="Buscar por Nome..."
+                placeholder="Buscar por id..."
                 className="form-control"
                 value={search}
                 onChange={handleSearch}
@@ -82,8 +81,8 @@ export default function Students() {
 
             {/* Botão Criar Usuário */}
             <div className="d-flex justify-content-end mb-3">
-              <Link href="/admin/students/create" className="btn btn-primary">
-                Criar Estudante
+              <Link href="/admin/professionals/create" className="btn btn-primary">
+                Criar Profissional
               </Link>
             </div>
 
@@ -93,36 +92,34 @@ export default function Students() {
                 <tr>
                   <th scope="col">#</th>
                   <th scope="col">Nome</th>
-                  <th scope="col">Idade</th>
-                  <th scope="col">Pais e/ou responsáveis</th>
-                  <th scope="col">Telefone</th>
-                  <th scope="col">Ações</th>
+                  <th scope="col">Especialidade</th>
+                  <th scope="col">Celular</th>
+                  <th scope="col">Ação</th>
                 </tr>
               </thead>
               <tbody>
-                {filteredstudents.map((student) => (
-                  <tr key={student._id}>
-                    <th scope="row">{student._id}</th>
-                    <td>{student.name}</td>
-                    <td>{student.age}</td>
-                    <td>{student.parents}</td>
-                    <td>{student.phone}</td>
+                {filteredProfessional.map((professional) => (
+                  <tr key={professional._id}>
+                    <th scope="row">{professional._id}</th>
+                    <td>{professional.name}</td>
+                    <td>{professional.specialty}</td>
+                    <td>{professional.phone_number}</td>
                     <td>
                       <a
                         className="btn btn-outline-success btn-sm me-2"
-                        href={`/admin/students/read/${student._id}`}
+                        href={`/admin/professionals/read/${professional._id}`}
                       >
                         Visualizar
                       </a>
                       <a
                         className="btn btn-outline-primary btn-sm me-2"
-                        href={`/admin/students/update/${student._id}`}
+                        href={`/admin/professionals/update/${professional._id}`}
                       >
                         Editar
                       </a>
                       <button
                         className="btn btn-outline-danger btn-sm"
-                        onClick={() => handleDelete(student._id)}
+                        onClick={() => handleDelete(professional._id)}
                       >
                         Deletar
                       </button>
@@ -132,34 +129,12 @@ export default function Students() {
               </tbody>
             </table>
 
-            {filteredstudents.length === 0 && (
+            {filteredProfessional.length === 0 && (
               <p className="text-center text-light">Nenhum compromisso encontrado.</p>
             )}
           </div>
         </div>
-        </div> 
-  </>
-  )
+      </div>
+    </>
+  );
 }
-
-// Adicionando a verificação de sessão no getServerSideProps
-export async function getServerSideProps(context) {
-  const session = await getSession({ req: context.req });
-
-  // Verifica se o usuário está logado, caso contrário, redireciona
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/login',  // Redireciona para a página de login
-        permanent: false,
-      },
-    };
-  }
-
-  // Retorna os dados da página, caso o usuário esteja logado
-  return {
-    props: { session }, // Passa a sessão como prop
-  };
-}
-
-

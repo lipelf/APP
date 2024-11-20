@@ -11,7 +11,7 @@ const eventsSchema = new mongoose.Schema({
     title: { type: String, required: true },
     description: { type: String, required: true },
     date: { type: Date, default: Date.now },
-    location: { type: String, required: true },
+    comments: { type: String, required: true },
     status: { type: String, required: true }
 });
 
@@ -70,9 +70,9 @@ router.get('/:id', async (req, res) => {
  *     summary: Insere um novo evento
  */
 router.post('/', async (req, res) => {
-    const { title, description, date, location, status } = req.body;
+    const { title, description, date, comments, status } = req.body;
 
-    if (!title || !description || !location || !status) {
+    if (!title || !description || !comments || !status) {
         return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
     }
 
@@ -81,7 +81,7 @@ router.post('/', async (req, res) => {
         title,
         description,
         date,
-        location,
+        comments,
         status
     });
 
@@ -101,10 +101,10 @@ router.post('/', async (req, res) => {
  *     summary: Atualiza um evento existente
  */
 router.put('/:id', async (req, res) => {
-    const { title, description, date, location, status } = req.body;
+    const { title, description, date, comments, status } = req.body;
 
     try {
-        const updateData = { title, description, date, location, status };
+        const updateData = { title, description, date, comments, status };
 
         const updatedEvent = await Event.findByIdAndUpdate(
             req.params.id, // Atualizando pelo _id do MongoDB

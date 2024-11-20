@@ -15,7 +15,7 @@ export default function ReadEvent() { // Alterado para eventos
     title: "",
     description: "",
     date: "",
-    location: "",
+    comments: "",
     status: ""
   });
 
@@ -94,8 +94,8 @@ export default function ReadEvent() { // Alterado para eventos
                     <input type="date" id="date" name="date" className="form-control" value={event.date} readOnly/>
                 </div>
                 <div className="form-group">
-                    <label className="form-label" htmlFor="location">Localização</label>
-                    <input type="text" id="location" name="location" className="form-control" value={event.location} readOnly/>
+                    <label className="form-label" htmlFor="comments">Comentário</label>
+                    <input type="text" id="comments" name="comments" className="form-control" value={event.comments} readOnly/>
                 </div>
                 <div className="form-group">
                     <label className="form-label" htmlFor="status">Status</label>

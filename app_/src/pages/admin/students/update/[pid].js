@@ -2,21 +2,19 @@ import { getSession } from 'next-auth/react';
 import NavAdmin from '@/components/NavAdmin';
 import MenuAdmin from '@/components/MenuAdmin';
 import Head from 'next/head';
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import Axios from 'axios';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
-export default function UpdateUser() {
-  const API_URL = "http://localhost:3001/api/users/";
+export default function UpdateStudent() {
+  const API_URL = "http://localhost:3001/api/students/";
 
-  const [user, setUser] = useState({
-    id: "",
+  const [student, setStudent] = useState({
     name: "",
-    email: "",
-    user: "",
-    pwd: "",
-    level: "",
+    age: "",
+    parents: "",
+    phone: "",
+    special: "",
     status: ""
   });
 
@@ -25,13 +23,6 @@ export default function UpdateUser() {
 
   const [message, setMessage] = useState({ message: "", status: "" });
 
-  const optionsLevel = [
-    { value: '', text: '-- Selecione um nível de acesso --' },
-    { value: 'admin', text: 'Administrador' },
-    { value: 'user', text: 'Usuário' },
-    { value: 'reader', text: 'Leitor' },
-  ];
-
   const optionsStatus = [
     { value: 'on', text: 'Ativo' },
     { value: 'off', text: 'Inativo' },
@@ -39,46 +30,43 @@ export default function UpdateUser() {
 
   useEffect(() => {
     if (pid) {
-      const getUser = async () => {
+      const getStudent = async () => {
         try {
           const response = await Axios.get(`${API_URL}${pid}`);
-          setMessage({ message: response.data.message, status: "ok" });
-          setUser(response.data);
+          setStudent(response.data);
         } catch (error) {
-          console.error('Erro ao buscar o usuário:', error);
-          setMessage({ message: "Erro ao buscar o usuário!", status: "error" });
+          setMessage({ message: "Erro ao buscar o estudante!", status: "error" });
         }
       };
 
-      getUser();
+      getStudent();
     }
   }, [pid]);
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setUser({
-      ...user,
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setStudent({
+      ...student,
       [name]: value
     });
   };
 
-  const handleUpdateUser = async () => {
+  const handleUpdateStudent = async () => {
+    if (!pid) {
+      setMessage({ message: "ID do estudante não encontrado!", status: "error" });
+      return;
+    }
+
     try {
-      console.log(`Updating user with ID: ${pid}`);
-      console.log(`API URL: ${API_URL}${pid}`);
-      console.log(`User data:`, user);
-      const response = await Axios.put(`${API_URL}${pid}`, user);
-      setMessage({ message: "Usuário atualizado com sucesso! ", status: "ok" });
+      const response = await Axios.put(`${API_URL}${pid}`, student);
+      setMessage({ message: "Estudante atualizado com sucesso!", status: "ok" });
       setTimeout(() => {
-        router.push('/admin/users');
-      }, 1500); 
-      
+        router.push('/admin/students');
+      }, 1500);
     } catch (error) {
-      console.error('Erro ao alterar o usuário:', error);
-      setMessage({ message: "Erro ao alterar o usuário!", status: "error" });
+      setMessage({ message: "Erro ao atualizar o estudante!", status: "error" });
     }
   };
-
 
   return (
     <>
@@ -90,70 +78,96 @@ export default function UpdateUser() {
       <div>
         <NavAdmin />
         <MenuAdmin />
-        { 
-  message.status === "" ? "" : 
-  message.status === "ok" ? (
-    <div className='alert alert-success' role='alert'> 
-      { message.message } 
-      <Link className='alert-link' href='/admin/users'>Voltar</Link>
-    </div>
-  ) : (
-    <div className='alert alert-danger' role='alert'> 
-      { message.message } 
-      <Link className='alert-link' href='/admin/users'>Voltar</Link>
-    </div>
-  )
-}
+        {
+          message.status === "" ? "" :
+          message.status === "ok" ? 
+          <div className='alert alert-success' role='alert'> { message.message } <Link className='alert-link' href='/admin/students'>Voltar</Link></div> :
+          <div className='alert alert-danger' role='alert'> { message.message } <Link className='alert-link' href='/admin/students'>Voltar</Link></div>
+        }
       </div>
-  
+
       <div className="d-flex justify-content-center p-2">
         <div className="container">
-            <div className="row border-bottom">
-                <h3> Edição de Usuário </h3>
-            
-                <form method="POST">
-                <div className="form-group">
-                    <label className="form-label" htmlFor="author_name">Nome</label>
-                    <input type="text" id="author_name" name="name" className="form-control" value={user.name} onChange={handleChange}/>
-                </div>
-                <div className="form-group">
-                    <label className="form-label" htmlFor="author_email">E-mail</label>
-                    <input type="text" id="author_email" name="email" className="form-control" value={user.email} onChange={handleChange} />
-                </div>
-                <div className="form-group">
-                    <label className="form-label" htmlFor="author_user">Usuário</label>
-                    <input type="text" id="author_user" name="user" className="form-control" value={user.user} onChange={handleChange} />
-                </div>
-                <div className="form-group">
-                    <label className="form-label" htmlFor="author_pwd">Senha</label>
-                    <input type="password" id="author_pwd" name="pwd" className="form-control" value={user.pwd} onChange={handleChange} />
-                </div>
-                <div className="form-group">
-                    <label className="form-label" htmlFor="author_level">Nível</label>
-                    <select className="form-select" id="author_level" name="level" value={user.level} onChange={handleChange}>
-                      {optionsLevel.map(option => (
-                        <option key={option.value} value={option.value}>
-                          {option.text}
-                        </option>
-                      ))}
-                    </select>
-                </div>
-                <div className="form-group">
-                    <label className="form-label" htmlFor="author_status">Status</label>
-                    <select className="form-select" id="author_status" name="status" value={user.status} onChange={handleChange}>
-                      {optionsStatus.map(option => (
-                        <option key={option.value} value={option.value}>
-                          {option.text}
-                        </option>
-                      ))}
-                    </select>
-                </div>
-                <div className="form-group p-2">
-                    <button className="btn btn-outline-success" type="button" onClick={handleUpdateUser} >Salvar</button>
-                    <Link className="btn btn-outline-info" href="/admin/users">Voltar</Link>
-                </div>
-                </form>
-            </div>
+          <div className="row border-bottom">
+            <h3>Edição de Estudante</h3>
+            <form>
+              <div className="form-group">
+                <label className="form-label" htmlFor="name">Nome</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  className="form-control"
+                  value={student.name}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="age">Idade</label>
+                <input
+                  type="number"
+                  id="age"
+                  name="age"
+                  className="form-control"
+                  value={student.age}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="parents">Responsáveis</label>
+                <input
+                  type="text"
+                  id="parents"
+                  name="parents"
+                  className="form-control"
+                  value={student.parents}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="phone">Telefone</label>
+                <input
+                  type="text"
+                  id="phone"
+                  name="phone"
+                  className="form-control"
+                  value={student.phone}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="special">Necessidades Especiais</label>
+                <input
+                  type="text"
+                  id="special"
+                  name="special"
+                  className="form-control"
+                  value={student.special}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="status">Status</label>
+                <select
+                  id="status"
+                  name="status"
+                  className="form-select"
+                  value={student.status}
+                  onChange={handleChange}
+                >
+                  {optionsStatus.map(option => (
+                    <option key={option.value} value={option.value}>
+                      {option.text}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group p-2">
+                <button className="btn btn-outline-success" type="button" onClick={handleUpdateStudent}>Salvar</button>
+                <Link className="btn btn-outline-info" href="/admin/students">Voltar</Link>
+              </div>
+            </form>
+          </div>
         </div>
       </div>  
   </>
