@@ -26,17 +26,16 @@ export default function CreateEvent() {
   };
 
   const handleCreateEvent = async () => {
-    // Verificar se todos os campos obrigatórios estão preenchidos
     if (!event.title || !event.description || !event.comments) {
       setMessage({ message: "Todos os campos são obrigatórios", status: "error" });
       return;
     }
 
-    // Gerar o campo 'date' automaticamente
+
     const eventWithDateAndStatus = {
       ...event,
-      date: new Date().toISOString(), // Definir a data como a data atual
-      status: "ativo", // Definindo o status como 'ativo' por padrão
+      date: new Date().toISOString(), 
+      status: "ativo",
     };
 
     try {
@@ -58,16 +57,17 @@ export default function CreateEvent() {
       <div>
         <NavAdmin />
         <MenuAdmin />
-        { 
-          message.status === "" ? "" : 
-          message.status === "ok" ? <div className='alert alert-success' role='alert'> { message.message } <Link className='alert-link' href='/admin/events'>Voltar</Link></div> : 
-          <div className='alert alert-danger' role='alert'> { message.message } <Link className='alert-link' href='/admin/events'>Voltar</Link></div>
-        }
+
       </div>
 
       <div className="d-flex justify-content-center p-2">
         <div className="container">
           <div className="row border-bottom">
+          { 
+          message.status === "" ? "" : 
+          message.status === "ok" ? <div className='alert alert-success' role='alert'> { message.message } <Link className='alert-link' href='/admin/events'>Voltar</Link></div> : 
+          <div className='alert alert-danger' role='alert'> { message.message } <Link className='alert-link' href='/admin/events'>Voltar</Link></div>
+        }
             <h3> Cadastro de Evento </h3>
             <form method="POST">
               <div className="form-group">
@@ -115,22 +115,22 @@ export default function CreateEvent() {
   );
 }
 
-// Adicionando a verificação de sessão no getServerSideProps
+
 export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req });
 
-  // Verifica se o usuário está logado, caso contrário, redireciona
+
   if (!session) {
     return {
       redirect: {
-        destination: '/login',  // Redireciona para a página de login
+        destination: '/login',  
         permanent: false,
       },
     };
   }
 
-  // Retorna os dados da página, caso o usuário esteja logado
+
   return {
-    props: { session }, // Passa a sessão como prop
+    props: { session }, 
   };
 }

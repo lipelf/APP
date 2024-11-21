@@ -17,9 +17,9 @@ export default function NavHome() {
 
 const styles = {
   navHome: {
-    backgroundColor: '#1a202c', // Um fundo escuro, mais sóbrio
-    borderRadius: '8px', // Bordas arredondadas suaves
-    boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)', // Sombra suave para um toque sofisticado
+    backgroundColor: '#1a202c', 
+    borderRadius: '8px',
+    boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)', 
   },
   title: {
     color: '#ffffff',
@@ -29,18 +29,18 @@ const styles = {
     margin: 0,
   },
   loginBtn: {
-    backgroundColor: '#4CAF50', // Verde mais suave
+    backgroundColor: '#4CAF50', 
     color: '#fff',
     padding: '10px 20px',
-    borderRadius: '30px', // Borda bem arredondada
+    borderRadius: '30px', 
     fontSize: '1rem',
     border: 'none',
     transition: 'background-color 0.3s ease, transform 0.2s ease-in-out',
   },
 };
 
-// Efeito de hover no botão de Login
+
 styles.loginBtn[':hover'] = {
-  backgroundColor: '#45a049', // Mudança de cor no hover
-  transform: 'scale(1.05)', // Leve aumento de tamanho
+  backgroundColor: '#45a049', 
+  transform: 'scale(1.05)', 
 };

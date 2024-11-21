@@ -41,7 +41,6 @@ export default function Events() {
       try {
         await Axios.delete(`${API_URL}/${id}`);
         alert("evento deletado com sucesso!");
-        // Remove o usuário deletado da lista exibida
         setEvents(event.filter((event) => event._id !== id));
         setFilteredEvents(filteredEvents.filter((event) => event._id !== id));
       } catch (error) {
@@ -69,7 +68,7 @@ export default function Events() {
           <div className="row border-bottom">
             <h3>Lista de Eventos</h3>
 
-            {/* Campo de busca e botão de criar compromisso */}
+
             <div className="d-flex justify-content-between align-items-center mb-3">
               <input
                 type="text"
@@ -83,7 +82,7 @@ export default function Events() {
               </Link>
             </div>
 
-            {/* Tabela de Usuários */}
+
             <table className="table table-hover table-dark">
               <thead>
                 <tr>
@@ -136,22 +135,22 @@ export default function Events() {
   );
 }
 
-// Adicionando a verificação de sessão no getServerSideProps
+
 export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req });
 
-  // Verifica se o usuário está logado, caso contrário, redireciona
+
   if (!session) {
     return {
       redirect: {
-        destination: '/login',  // Redireciona para a página de login
+        destination: '/login',  
         permanent: false,
       },
     };
   }
 
-  // Retorna os dados da página, caso o usuário esteja logado
+
   return {
-    props: { session }, // Passa a sessão como prop
+    props: { session }, 
   };
 }

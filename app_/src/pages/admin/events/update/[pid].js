@@ -53,7 +53,6 @@ export default function UpdateEvent() {
 
   const handleUpdateEvent = async () => {
     try {
-      // Crie um novo objeto com os dados necessários
       const cleanEvent = {
         title: event.title,
         description: event.description,
@@ -68,7 +67,7 @@ export default function UpdateEvent() {
       const response = await Axios.put(`${API_URL}${pid}`, cleanEvent);
       setMessage({ message: "Evento atualizado com sucesso!", status: "ok" });
       setTimeout(() => {
-        router.push('/admin/events');  // Redireciona após 1,5 segundos
+        router.push('/admin/events'); 
       }, 1500); 
       
     } catch (error) {
@@ -87,7 +86,12 @@ export default function UpdateEvent() {
       <div>
         <NavAdmin />
         <MenuAdmin />
-        { 
+      </div>
+  
+      <div className="d-flex justify-content-center p-2">
+        <div className="container">
+          <div className="row border-bottom">
+          { 
           message.status === "" ? "" : 
           message.status === "ok" ? (
             <div className='alert alert-success' role='alert'> 
@@ -101,11 +105,6 @@ export default function UpdateEvent() {
             </div>
           )
         }
-      </div>
-  
-      <div className="d-flex justify-content-center p-2">
-        <div className="container">
-          <div className="row border-bottom">
             <h3> Edição de Evento </h3>
         
             <form method="POST">
@@ -169,22 +168,21 @@ export default function UpdateEvent() {
   )
 }
 
-// Adicionando a verificação de sessão no getServerSideProps
 export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req });
 
-  // Verifica se o usuário está logado, caso contrário, redireciona
+
   if (!session) {
     return {
       redirect: {
-        destination: '/login',  // Redireciona para a página de login
+        destination: '/login',  
         permanent: false,
       },
     };
   }
 
-  // Retorna os dados da página, caso o usuário esteja logado
+
   return {
-    props: { session }, // Passa a sessão como prop
+    props: { session }, 
   };
 }

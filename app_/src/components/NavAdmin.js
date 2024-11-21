@@ -24,7 +24,7 @@ export default function NavAdmin() {
 
 const styles = {
   navAdmin: {
-    backgroundColor: "#1a202c", // Cor preta/escura
+    backgroundColor: "#1a202c", 
     padding: "15px",
     borderRadius: "8px",
     boxShadow: "0 3px 7px rgba(0, 0, 0, 0.3)",

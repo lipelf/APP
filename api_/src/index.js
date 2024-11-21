@@ -1,4 +1,3 @@
-// src/index.js
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -16,8 +15,8 @@ app.use(bodyParser.json());
 const cors = require('cors');
 app.use(cors());
 
-// Conecte-se ao MongoDB
-const mongoURI = 'mongodb://localhost:27017/mydb'; // Altere para o URI do seu MongoDB
+
+const mongoURI = 'mongodb://localhost:27017/mydb'; 
 mongoose.connect(mongoURI)
   .then(() => {
     console.log('Conectado ao MongoDB');
@@ -26,7 +25,6 @@ mongoose.connect(mongoURI)
     console.error('Erro ao conectar ao MongoDB:', err);
   });
 
-// Use as rotas
 app.use('/api/appointments', appointmentRoutes);
 app.use('/api/events', eventsRoutes);
 app.use('/api/professionals', professionalsRoutes);

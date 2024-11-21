@@ -32,7 +32,7 @@ export default function Appointments() {
     const term = e.target.value.toLowerCase();
     setSearch(term);
     const filtered = appointment.filter((appointment) => 
-      appointment.date.toLowerCase().includes(term) // Filtro pela data também
+      appointment.date.toLowerCase().includes(term) 
     );
     setFilteredAppointments(filtered);
   };
@@ -55,7 +55,6 @@ export default function Appointments() {
           <div className="row border-bottom">
             <h3>Lista de Compromissos</h3>
 
-            {/* Campo de busca e botão de criar compromisso */}
             <div className="d-flex justify-content-between align-items-center mb-3">
               <input
                 type="text"
@@ -69,7 +68,6 @@ export default function Appointments() {
               </Link>
             </div>
 
-            {/* Tabela de Compromissos */}
             <table className="table table-hover table-dark">
               <thead>
                 <tr>
@@ -104,22 +102,22 @@ export default function Appointments() {
   );
 }
 
-// Adicionando a verificação de sessão no getServerSideProps
+
 export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req });
 
-  // Verifica se o usuário está logado, caso contrário, redireciona
+  
   if (!session) {
     return {
       redirect: {
-        destination: '/login',  // Redireciona para a página de login
+        destination: '/login',  
         permanent: false,
       },
     };
   }
 
-  // Retorna os dados da página, caso o usuário esteja logado
+
   return {
-    props: { session }, // Passa a sessão como prop
+    props: { session }, 
   };
 }

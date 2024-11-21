@@ -8,16 +8,14 @@ import Axios from 'axios';
 
 export default function CreateUser() {
   const API_URL = "http://localhost:3001/api/users";
-
   const [user, setUser] = useState({
-    name: "",    // Renomeado para refletir os dados do backend
-    email: "",   // Renomeado para refletir os dados do backend
-    user: "",    // Renomeado para refletir os dados do backend
-    pwd: "",     // Renomeado para refletir os dados do backend
-    level: "",   // Renomeado para refletir os dados do backend
-    status: "",  // Renomeado para refletir os dados do backend
+    name: "",
+    email: "",
+    user: "",
+    pwd: "",
+    level: "",
+    status: "",
   });
-
   const [message, setMessage] = useState({ message: "", status: "" });
 
   const optionsLevel = [
@@ -33,7 +31,6 @@ export default function CreateUser() {
     { value: 'false', text: 'Inativo' },
   ];
 
-  // Função para lidar com as mudanças nos campos do formulário
   const handleChange = (event) => {
     const { name, value } = event.target;
     setUser({
@@ -42,14 +39,53 @@ export default function CreateUser() {
     });
   };
 
-  // Função para enviar os dados do formulário e criar um novo usuário
-  const handleCreateUser = async () => {
+  const checkUsernameExists = async (username) => {
     try {
-      const response = await Axios.post(API_URL, user);  // Envia os dados ao backend
-      setMessage({ message: response.data.sucesso, status: "ok" });
+      const response = await Axios.get(`${API_URL}/check-username/${username}`);
+      return response.data.exists;
     } catch (error) {
+      console.error("Erro ao verificar nome de usuário:", error);
+      return false;
+    }
+  };
+
+  const handleCreateUser = async () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!user.name.trim() || !user.email.trim() || !user.user.trim() || !user.pwd.trim() || !user.level || !user.status) {
+      setMessage({ message: "Todos os campos são obrigatórios.", status: "error" });
+      return;
+    }
+
+    if (!emailRegex.test(user.email)) {
+      setMessage({ message: "Por favor, insira um e-mail válido.", status: "error" });
+      return;
+    }
+
+    if (user.pwd.length < 6) {
+      setMessage({ message: "A senha deve ter pelo menos 6 caracteres.", status: "error" });
+      return;
+    }
+
+    const isUsernameTaken = await checkUsernameExists(user.user);
+    if (isUsernameTaken) {
+      setMessage({ message: "Este nome de usuário já está em uso.", status: "error" });
+      return;
+    }
+
+    try {
+      const response = await Axios.post(API_URL, user);
+      setMessage({ message: response.data.sucesso, status: "ok" });
+      setTimeout(() => {
+        window.location.href = '/admin';
+      }, 1000);
+    } catch (error) {
+      if (error.response) {
+        setMessage({ message: error.response.data.error || "Erro ao criar o Usuário!", status: "error" });
+      } else {
+        setMessage({ message: "Erro na comunicação com o servidor.", status: "error" });
+      }
       console.error('Erro ao criar o Usuário:', error);
-      setMessage({ message: "Erro ao criar o Usuário!", status: "error" });
     }
   };
 
@@ -63,83 +99,79 @@ export default function CreateUser() {
       <div>
         <NavAdmin />
         <MenuAdmin />
-        { 
-          message.status === "" ? "" : 
-          message.status === "ok" ? <div className='alert alert-success' role='alert'> { message.message } <Link className='alert-link' href='/admin'>Voltar</Link></div> : 
-          <div className='alert alert-danger' role='alert'> { message.message } <Link className='alert-link' href='/admin'>Voltar</Link></div>
-        }
       </div>
-  
+
       <div className="d-flex justify-content-center p-2">
         <div className="container">
-            <div className="row border-bottom">
-                <h3> Cadastro de Usuário </h3>
-            
-                <form method="POST">
-                <div className="form-group">
-                    <label className="form-label" htmlFor="name">Nome</label>
-                    <input type="text" id="name" name="name" className="form-control" value={user.name} onChange={handleChange} />
-                </div>
-                <div className="form-group">
-                    <label className="form-label" htmlFor="email">E-mail</label>
-                    <input type="text" id="email" name="email" className="form-control" value={user.email} onChange={handleChange} />
-                </div>
-                <div className="form-group">
-                    <label className="form-label" htmlFor="user">Usuário</label>
-                    <input type="text" id="user" name="user" className="form-control" value={user.user} onChange={handleChange} />
-                </div>
-                <div className="form-group">
-                    <label className="form-label" htmlFor="pwd">Senha</label>
-                    <input type="password" id="pwd" name="pwd" className="form-control" value={user.pwd} onChange={handleChange} />
-                </div>
-                <div className="form-group">
-                    <label className="form-label" htmlFor="level">Nível</label>
-                    <select className="form-select" id="level" name="level" value={user.level} onChange={handleChange}>
-                      {optionsLevel.map(option => (
-                        <option key={option.value} value={option.value}>
-                          {option.text}
-                        </option>
-                      ))}
-                    </select>
-                </div>
-                <div className="form-group">
-                    <label className="form-label" htmlFor="status">Status</label>
-                    <select className="form-select" id="status" name="status" value={user.status} onChange={handleChange}>
-                      {optionsStatus.map(option => (
-                        <option key={option.value} value={option.value}>
-                          {option.text}
-                        </option>
-                      ))}
-                    </select>
-                </div>
-                <div className="form-group p-2">
-                    <button className="btn btn-outline-success" type="button" onClick={handleCreateUser}>Salvar</button>
-                    <Link className="btn btn-outline-info" href="/admin">Voltar</Link>
-                </div>
-                </form>
-            </div>
+          <div className="row border-bottom">
+            {message.status === "" ? "" :
+              message.status === "ok" ? <div className='alert alert-success' role='alert'>{message.message} <Link className='alert-link' href='/admin'>Voltar</Link></div> :
+                <div className='alert alert-danger' role='alert'>{message.message} <Link className='alert-link' href='/admin'>Voltar</Link></div>
+            }
+            <h3> Cadastro de Usuário </h3>
+
+            <form method="POST">
+              <div className="form-group">
+                <label className="form-label" htmlFor="name">Nome</label>
+                <input type="text" id="name" name="name" className="form-control" value={user.name} onChange={handleChange} />
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="email">E-mail</label>
+                <input type="email" id="email" name="email" className="form-control" value={user.email} onChange={handleChange} />
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="user">Usuário</label>
+                <input type="text" id="user" name="user" className="form-control" value={user.user} onChange={handleChange} />
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="pwd">Senha</label>
+                <input type="password" id="pwd" name="pwd" className="form-control" value={user.pwd} onChange={handleChange} />
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="level">Nível</label>
+                <select className="form-select" id="level" name="level" value={user.level} onChange={handleChange}>
+                  {optionsLevel.map(option => (
+                    <option key={option.value} value={option.value}>
+                      {option.text}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="status">Status</label>
+                <select className="form-select" id="status" name="status" value={user.status} onChange={handleChange}>
+                  {optionsStatus.map(option => (
+                    <option key={option.value} value={option.value}>
+                      {option.text}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group p-2">
+                <button className="btn btn-outline-success" type="button" onClick={handleCreateUser}>Salvar</button>
+                <Link className="btn btn-outline-info" href="/admin">Voltar</Link>
+              </div>
+            </form>
+          </div>
         </div>
-      </div>  
+      </div>
     </>
-  )
+  );
 }
 
-// Adicionando a verificação de sessão no getServerSideProps
 export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req });
 
-  // Verifica se o usuário está logado, caso contrário, redireciona
   if (!session) {
     return {
       redirect: {
-        destination: '/login',  // Redireciona para a página de login
+        destination: '/login',
         permanent: false,
       },
     };
   }
 
-  // Retorna os dados da página, caso o usuário esteja logado
   return {
-    props: { session }, // Passa a sessão como prop
+    props: { session },
   };
 }

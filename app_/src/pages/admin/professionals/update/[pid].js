@@ -77,16 +77,16 @@ export default function UpdateProfessional() {
       <div>
         <NavAdmin />
         <MenuAdmin />
-        { 
-          message.status === "" ? "" : 
-          message.status === "ok" ? <div className='alert alert-success' role='alert'> { message.message } <Link className='alert-link' href='/admin/professionals'>Voltar</Link></div> : 
-          <div className='alert alert-danger' role='alert'> { message.message } <Link className='alert-link' href='/admin/professionals'>Voltar</Link></div>
-        }
       </div>
 
       <div className="d-flex justify-content-center p-2">
         <div className="container">
           <div className="row border-bottom">
+          { 
+          message.status === "" ? "" : 
+          message.status === "ok" ? <div className='alert alert-success' role='alert'> { message.message } <Link className='alert-link' href='/admin/professionals'>Voltar</Link></div> : 
+          <div className='alert alert-danger' role='alert'> { message.message } <Link className='alert-link' href='/admin/professionals'>Voltar</Link></div>
+        }
             <h3>Edição de Profissional</h3>
             <form>
               <div className="form-group">

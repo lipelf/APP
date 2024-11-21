@@ -40,7 +40,6 @@ export default function Professional() {
       try {
         await Axios.delete(`${API_URL}/${id}`);
         alert("Compromisso deletado com sucesso!");
-        // Remove o usuário deletado da lista exibida
         setProfessional(professional.filter((professional) => professional._id !== id));
         setFilteredProfessional(filteredProfessional.filter((professional) => professional._id !== id));
       } catch (error) {
@@ -68,7 +67,6 @@ export default function Professional() {
           <div className="row border-bottom">
             <h3>Lista de Profissionais </h3>
 
-            {/* Campo de busca e botão de criar compromisso */}
             <div className="d-flex justify-content-between align-items-center mb-3">
               <input
                 type="text"
@@ -82,7 +80,6 @@ export default function Professional() {
               </Link>
             </div>
 
-            {/* Tabela de Usuários */}
             <table className="table table-hover table-dark">
               <thead>
                 <tr>

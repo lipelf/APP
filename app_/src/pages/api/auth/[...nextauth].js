@@ -22,14 +22,14 @@ export default NextAuth({
       authorize: async (credentials) => {
         const user = users.find((user) => user.email === credentials.email);
         if (user && bcrypt.compareSync(credentials.password, user.password)) {
-          return { id: user.id, name: user.name, email: user.email }; // Retorne o usuário se autenticar corretamente
+          return { id: user.id, name: user.name, email: user.email }; 
         }
-        return null; // Retorne null se não encontrar o usuário ou falhar na autenticação
+        return null; 
       },
     }),
   ],
   pages: {
-    signIn: '/login', // Redireciona para a página de login
+    signIn: '/login', 
   },
   session: {
     jwt: true,

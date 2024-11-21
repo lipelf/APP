@@ -1,14 +1,13 @@
-/* Ajustes para o Header/Navbar */
 .navbar {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  height: 60px; /* Altura fixa do header */
+  height: 60px;
   background-color: #333;
   color: white;
   padding: 10px 20px;
-  z-index: 2; /* Camada superior ao da sidebar */
+  z-index: 2;
   display: flex;
   align-items: center;
 }
@@ -34,43 +33,41 @@
   background-color: #C53030;
 }
 
-/* Ajustes para o Menu Lateral */
 .sidebar {
-  width: 180px; /* Largura ajustada */
-  height: calc(100vh - 60px); /* Altura da tela menos o header */
+  width: 180px;
+  height: calc(100vh - 60px);
   background-color: #2D3748;
   padding: 20px;
   position: fixed;
-  top: 60px; /* Posicionado abaixo do header */
+  top: 60px;
   left: 0;
-  z-index: 1; /* Camada abaixo do header */
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  transition: width 0.3s ease; /* Transição suave ao passar o mouse */
+  transition: width 0.3s ease;
 }
 
-.table-dark{
-    --bs-table-color: #fff;
-    --bs-table-bg: #212529;
-    --bs-table-border-color: #4d5154;
-    --bs-table-striped-bg: #2c3034;
-    --bs-table-striped-color: #fff;
-    --bs-table-active-bg: #373b3e;
-    --bs-table-active-color: #fff;
-    --bs-table-hover-bg: #323539;
-    --bs-table-hover-color: #fff;
-    color: var(--bs-table-color);
-    border-color: var(--bs-table-border-color);
+.table-dark {
+  --bs-table-color: #fff;
+  --bs-table-bg: #212529;
+  --bs-table-border-color: #4d5154;
+  --bs-table-striped-bg: #2c3034;
+  --bs-table-striped-color: #fff;
+  --bs-table-active-bg: #373b3e;
+  --bs-table-active-color: #fff;
+  --bs-table-hover-bg: #323539;
+  --bs-table-hover-color: #fff;
+  color: var(--bs-table-color);
+  border-color: var(--bs-table-border-color);
 }
 
 .sidebar:hover {
-  width: 200px; /* Expande para 200px ao passar o mouse */
+  width: 200px;
 }
 
-/* Ajustes para a lista na sidebar */
 .sidebar ul {
-  list-style: none; /* Remove as bolinhas */
+  list-style: none;
   padding: 0;
   margin: 0;
 }
@@ -79,14 +76,13 @@
   margin-bottom: 15px;
 }
 
-/* Links do menu */
 .sidebar a {
   color: white;
   text-decoration: none;
   font-size: 1rem;
   margin-bottom: 15px;
   padding: 10px 15px;
-  border-radius: 0; /* Remove as bordas arredondadas */
+  border-radius: 0;
   display: block;
   transition: background-color 0.3s ease, color 0.3s ease, padding-left 0.3s ease;
 }
@@ -94,17 +90,16 @@
 .sidebar a:hover {
   background-color: #4A5568;
   color: #CBD5E0;
-  padding-left: 25px; /* Adiciona um pequeno movimento ao texto */
+  padding-left: 25px;
 }
 
-/* Ajustes para o Conteúdo Principal */
 body {
   background-color: #1a202c;
   color: white;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
   padding: 0;
-  padding-top: 60px; /* Espaço para o header */
+  padding-top: 60px;
 }
 
 .no-header {
@@ -115,20 +110,19 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 200px; /* Ajuste conforme necessário */
+  max-width: 200px;
 }
 
 .container {
-  margin-left: 180px; /* Espaço para o menu lateral */
+  margin-left: 180px;
   padding: 20px;
-  width: calc(100% - 180px); /* Ajusta largura para não ultrapassar o menu */
+  width: calc(100% - 180px);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
 }
 
-/* Ajustes para a Tabela */
 .row {
   background-color: #2D3748;
   border-radius: 8px;
@@ -140,7 +134,7 @@ body {
 .table {
   width: 100%;
   border-collapse: collapse;
-  background-color: var(--bs-table-bg)
+  background-color: var(--bs-table-bg);
 }
 
 .table th,
@@ -159,7 +153,6 @@ body {
   background-color: #3B4252;
 }
 
-/* Responsividade */
 @media (max-width: 768px) {
   .sidebar {
     display: none;

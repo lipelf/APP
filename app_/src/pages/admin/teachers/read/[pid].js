@@ -8,7 +8,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 
 export default function ReadTeacher() {
-  const API_URL = 'http://localhost:3001/api/teachers/'; // URL base da API
+  const API_URL = 'http://localhost:3001/api/teachers/';
 
   const [teacher, setTeacher] = useState({
     name: '',
@@ -130,7 +130,7 @@ export default function ReadTeacher() {
   );
 }
 
-// Adicionando a verificação de sessão no getServerSideProps
+
 export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req });
 

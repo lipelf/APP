@@ -25,7 +25,7 @@ export default function CreateProfessional() {
     { value: 'false', text: 'Inativo' },
   ];
 
-  // Função para lidar com as mudanças nos campos do formulário
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     setProfessional({
@@ -34,9 +34,9 @@ export default function CreateProfessional() {
     });
   };
 
-  // Função para enviar os dados do formulário e criar um novo profissional
+ 
   const handleCreateProfessional = async () => {
-    // Verifique se todos os campos estão preenchidos
+    
     if (!professional.name || !professional.specialty || !professional.contact || !professional.phone_number || !professional.status) {
       setMessage({ message: "Por favor, preencha todos os campos.", status: "error" });
       return;
@@ -62,7 +62,12 @@ export default function CreateProfessional() {
       <div>
         <NavAdmin />
         <MenuAdmin />
-        { 
+      </div>
+  
+      <div className="d-flex justify-content-center p-2">
+        <div className="container">
+          <div className="row border-bottom">
+          { 
           message.status === "" ? "" : 
           message.status === "ok" ? (
             <div className='alert alert-success' role='alert'>
@@ -74,11 +79,6 @@ export default function CreateProfessional() {
             </div>
           )
         }
-      </div>
-  
-      <div className="d-flex justify-content-center p-2">
-        <div className="container">
-          <div className="row border-bottom">
             <h3> Cadastro de Profissional </h3>
             
             <form method="POST">
@@ -158,11 +158,11 @@ export default function CreateProfessional() {
   );
 }
 
-// Adicionando a verificação de sessão no getServerSideProps
+
 export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req });
 
-  // Verifica se o usuário está logado, caso contrário, redireciona
+
   if (!session) {
     return {
       redirect: {
@@ -172,7 +172,7 @@ export async function getServerSideProps(context) {
     };
   }
 
-  // Retorna os dados da página, caso o usuário esteja logado
+
   return {
     props: { session },
   };

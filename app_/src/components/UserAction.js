@@ -10,8 +10,8 @@ export default function UserAction({ pid }) {
         await Axios.delete(API_URL);
         alert("Usuário deletado com sucesso!");
 
-        // Opcional: Atualiza a página ou dispara um evento para o componente pai
-        window.location.reload(); // Recarrega a página
+       
+        window.location.reload(); 
       } catch (error) {
         console.error("Erro ao deletar o usuário:", error);
         alert("Erro ao deletar o usuário. Tente novamente.");

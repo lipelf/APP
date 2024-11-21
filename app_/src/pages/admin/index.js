@@ -41,7 +41,6 @@ export default function Users() {
       try {
         await Axios.delete(`${API_URL}/${id}`);
         alert("Usuário deletado com sucesso!");
-        // Remove o usuário deletado da lista exibida
         setUsers(users.filter((user) => user._id !== id));
         setFilteredUsers(filteredUsers.filter((user) => user._id !== id));
       } catch (error) {
@@ -82,11 +81,11 @@ export default function Users() {
               </Link>
             </div>
 
-            {/* Tabela de Usuários */}
             <table className="table table-hover table-dark">
               <thead>
                 <tr>
                   <th scope="col">#</th>
+                  <th scope="col">Usuário</th>
                   <th scope="col">Nome</th>
                   <th scope="col">E-mail</th>
                   <th scope="col">Ação</th>
@@ -96,6 +95,7 @@ export default function Users() {
                 {filteredUsers.map((user) => (
                   <tr key={user._id}>
                     <th scope="row">{user._id}</th>
+                    <td className="text-truncate">{user.user}</td>
                     <td className="text-truncate">{user.name}</td>
                     <td className="text-truncate">{user.email}</td>
                     <td>
@@ -134,22 +134,22 @@ export default function Users() {
   );
 }
 
-// Adicionando a verificação de sessão no getServerSideProps
+
 export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req });
 
-  // Verifica se o usuário está logado, caso contrário, redireciona
+
   if (!session) {
     return {
       redirect: {
-        destination: '/login',  // Redireciona para a página de login
+        destination: '/login',  
         permanent: false,
       },
     };
   }
 
-  // Retorna os dados da página, caso o usuário esteja logado
+
   return {
-    props: { session }, // Passa a sessão como prop
+    props: { session }, 
   };
 }

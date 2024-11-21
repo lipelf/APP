@@ -81,16 +81,16 @@ export default function UpdateTeacher() {
       <div>
         <NavAdmin />
         <MenuAdmin />
-        { 
-          message.status === "" ? "" : 
-          message.status === "ok" ? <div className='alert alert-success' role='alert'>{ message.message } <Link className='alert-link' href='/admin/teachers'>Voltar</Link></div> : 
-          <div className='alert alert-danger' role='alert'>{ message.message } <Link className='alert-link' href='/admin/teachers'>Voltar</Link></div>
-        }
       </div>
 
       <div className="d-flex justify-content-center p-2">
         <div className="container">
           <div className="row border-bottom">
+          { 
+          message.status === "" ? "" : 
+          message.status === "ok" ? <div className='alert alert-success' role='alert'>{ message.message } <Link className='alert-link' href='/admin/teachers'>Voltar</Link></div> : 
+          <div className='alert alert-danger' role='alert'>{ message.message } <Link className='alert-link' href='/admin/teachers'>Voltar</Link></div>
+        }
             <h3>Edição de Professor</h3>
             <form>
               <div className="form-group">
@@ -162,22 +162,22 @@ export default function UpdateTeacher() {
   );
 }
 
-// Adicionando a verificação de sessão no getServerSideProps
+
 export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req });
 
-  // Verifica se o usuário está logado, caso contrário, redireciona
+
   if (!session) {
     return {
       redirect: {
-        destination: '/login',  // Redireciona para a página de login
+        destination: '/login',  
         permanent: false,
       },
     };
   }
 
-  // Retorna os dados da página, caso o usuário esteja logado
+
   return {
-    props: { session }, // Passa a sessão como prop
+    props: { session }, 
   };
 }

@@ -7,7 +7,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 
 export default function ReadProfessional() {
-  const API_URL = 'http://localhost:3001/api/professionals/'; // URL base da API
+  const API_URL = 'http://localhost:3001/api/professionals/'; 
 
   const [professional, setProfessional] = useState({
     name: '',
@@ -18,7 +18,7 @@ export default function ReadProfessional() {
   });
 
   const router = useRouter();
-  const { pid } = router.query; // Pegando o _id diretamente da rota
+  const { pid } = router.query; 
 
   const [message, setMessage] = useState({ message: '', status: '' });
 

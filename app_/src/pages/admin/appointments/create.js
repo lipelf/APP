@@ -29,7 +29,7 @@ export default function CreateAppointments() {
   const handleCreateAppointments = async () => {
     const appointmentWithDate = {
       ...appointment,
-      date: new Date().toISOString() // Define a data atual no formato ISO 8601
+      date: new Date().toISOString() 
     };
 
     try {
@@ -51,32 +51,32 @@ export default function CreateAppointments() {
       <div>
         <NavAdmin />
         <MenuAdmin />
-        { 
-          message.status === "" ? "" : 
-          message.status === "ok" ? <div className='alert alert-success' role='alert'> { message.message } <Link className='alert-link' href='/admin/appointments'>Voltar</Link></div> : 
-          <div className='alert alert-danger' role='alert'> { message.message } <Link className='alert-link' href='/admin/appointments'>Voltar</Link></div>
-        }
       </div>
 
       <div className="d-flex justify-content-center p-2">
         <div className="container">
           <div className="row border-bottom">
+          { 
+          message.status === "" ? "" : 
+          message.status === "ok" ? <div className='alert alert-success' role='alert'> { message.message } <Link className='alert-link' href='/admin/appointments'>Voltar</Link></div> : 
+          <div className='alert alert-danger' role='alert'> { message.message } <Link className='alert-link' href='/admin/appointments'>Voltar</Link></div>
+        }
             <h3> Cadastro de Agendamento </h3>
             <form method="POST">
               <div className="form-group">
-                <label className="form-label" htmlFor="comments">Comments</label>
+                <label className="form-label" htmlFor="comments">Comentários</label>
                 <input type="text" id="comments" name="comments" className="form-control" value={appointment.comments} onChange={handleChange} />
               </div>
               <div className="form-group">
-                <label className="form-label" htmlFor="specialty">Specialty</label>
+                <label className="form-label" htmlFor="specialty">Especialidade</label>
                 <input type="text" id="specialty" name="specialty" className="form-control" value={appointment.specialty} onChange={handleChange} />
               </div>
               <div className="form-group">
-                <label className="form-label" htmlFor="student">Student</label>
+                <label className="form-label" htmlFor="student">Estudante</label>
                 <input type="text" id="student" name="student" className="form-control" value={appointment.student} onChange={handleChange} />
               </div>
               <div className="form-group">
-                <label className="form-label" htmlFor="professional">Professional</label>
+                <label className="form-label" htmlFor="professional">Profissional</label>
                 <input type="text" id="professional" name="professional" className="form-control" value={appointment.professional} onChange={handleChange} />
               </div>
               <div className="form-group p-2">
@@ -91,22 +91,22 @@ export default function CreateAppointments() {
   )
 }
 
-// Adicionando a verificação de sessão no getServerSideProps
+
 export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req });
 
-  // Verifica se o usuário está logado, caso contrário, redireciona
+
   if (!session) {
     return {
       redirect: {
-        destination: '/login',  // Redireciona para a página de login
+        destination: '/login', 
         permanent: false,
       },
     };
   }
 
-  // Retorna os dados da página, caso o usuário esteja logado
+
   return {
-    props: { session }, // Passa a sessão como prop
+    props: { session }, 
   };
 }

@@ -10,12 +10,12 @@ export default function CreateStudents() {
   const API_URL = "http://localhost:3001/api/students";
 
   const [students, setStudents] = useState({
-    name: "",    // Renomeado para refletir os dados do backend
-    age: "",   // Renomeado para refletir os dados do backend
-    parents: "",    // Renomeado para refletir os dados do backend
-    phone: "",     // Renomeado para refletir os dados do backend
-    special: "",   // Renomeado para refletir os dados do backend
-    status: "",  // Renomeado para refletir os dados do backend
+    name: "",   
+    age: "",   
+    parents: "",   
+    phone: "",     
+    special: "",   
+    status: "",  
   });
 
   const [message, setMessage] = useState({ message: "", status: "" });
@@ -26,7 +26,7 @@ export default function CreateStudents() {
     { value: 'false', text: 'Inativo' },
   ];
 
-  // Função para lidar com as mudanças nos campos do formulário
+ 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setStudents({
@@ -35,10 +35,10 @@ export default function CreateStudents() {
     });
   };
 
-  // Função para enviar os dados do formulário e criar um novo usuário
+  
   const handleCreatestudents = async () => {
     try {
-      const response = await Axios.post(API_URL, students);  // Envia os dados ao backend
+      const response = await Axios.post(API_URL, students); 
       setMessage({ message: response.data.sucesso, status: "ok" });
     } catch (error) {
       console.error('Erro ao criar o Usuário:', error);
@@ -56,16 +56,16 @@ export default function CreateStudents() {
       <div>
         <NavAdmin />
         <MenuAdmin />
-        { 
-          message.status === "" ? "" : 
-          message.status === "ok" ? <div className='alert alert-success' role='alert'> { message.message } <Link className='alert-link' href='/admin/students'>Voltar</Link></div> : 
-          <div className='alert alert-danger' role='alert'> { message.message } <Link className='alert-link' href='/admin/students'>Voltar</Link></div>
-        }
       </div>
   
       <div className="d-flex justify-content-center p-2">
         <div className="container">
             <div className="row border-bottom">
+            { 
+          message.status === "" ? "" : 
+          message.status === "ok" ? <div className='alert alert-success' role='alert'> { message.message } <Link className='alert-link' href='/admin/students'>Voltar</Link></div> : 
+          <div className='alert alert-danger' role='alert'> { message.message } <Link className='alert-link' href='/admin/students'>Voltar</Link></div>
+        }
                 <h3> Cadastro de Usuário </h3>
             
                 <form method="POST">
@@ -78,15 +78,15 @@ export default function CreateStudents() {
                     <input type="number" id="age" name="age" className="form-control" value={students.age} onChange={handleChange} />
                 </div>
                 <div className="form-group">
-                    <label className="form-label" htmlFor="parents">Parents</label>
+                    <label className="form-label" htmlFor="parents">Responsáveis</label>
                     <input type="text" id="parents" name="parents" className="form-control" value={students.parents} onChange={handleChange} />
                 </div>
                 <div className="form-group">
-                    <label className="form-label" htmlFor="phone">Phone</label>
+                    <label className="form-label" htmlFor="phone">Telefone</label>
                     <input type="text" id="phone" name="phone" className="form-control" value={students.phone} onChange={handleChange} />
                 </div>
                 <div className="form-group">
-                    <label className="form-label" htmlFor="special">Special</label>
+                    <label className="form-label" htmlFor="special">Necessidades Especiais</label>
                     <input type="text" id="special" name="special" className="form-control" value={students.special} onChange={handleChange} />
                 </div>
                 <div className="form-group">
@@ -111,22 +111,22 @@ export default function CreateStudents() {
   )
 }
 
-// Adicionando a verificação de sessão no getServerSideProps
+
 export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req });
 
-  // Verifica se o usuário está logado, caso contrário, redireciona
+  
   if (!session) {
     return {
       redirect: {
-        destination: '/login',  // Redireciona para a página de login
+        destination: '/login',  
         permanent: false,
       },
     };
   }
 
-  // Retorna os dados da página, caso o usuário esteja logado
+  
   return {
-    props: { session }, // Passa a sessão como prop
+    props: { session },
   };
 }

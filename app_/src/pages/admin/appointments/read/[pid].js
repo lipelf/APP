@@ -8,7 +8,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 
 export default function ReadAppointment() {
-  const API_URL = 'http://localhost:3001/api/appointments/'; // URL base da API
+  const API_URL = 'http://localhost:3001/api/appointments/'; 
 
   const [appointment, setAppointment] = useState({
     specialty: '',
@@ -19,7 +19,7 @@ export default function ReadAppointment() {
   });
 
   const router = useRouter();
-  const { pid } = router.query; // Pegando o _id diretamente da rota
+  const { pid } = router.query; 
 
   const [message, setMessage] = useState({ message: '', status: '' });
 
@@ -27,14 +27,14 @@ export default function ReadAppointment() {
     if (pid) {
       const getAppointment = async () => {
         try {
-          // Buscando os dados com base no _id do MongoDB
+          
           const response = await Axios.get(`${API_URL}${pid}`);
           setMessage({ message: 'Appointment encontrado!', status: 'ok' });
 
-          // Formatando a data (se necessário)
+          
           const formattedDate = new Date(response.data.date).toISOString().split('T')[0];
 
-          // Atualizando o estado com os dados recebidos
+          
           setAppointment({
             ...response.data,
             date: formattedDate,
@@ -71,7 +71,7 @@ export default function ReadAppointment() {
             <h3>Detalhes do Appointment</h3>
             <form>
               <div className="form-group">
-                <label className="form-label" htmlFor="specialty">Specialty</label>
+                <label className="form-label" htmlFor="specialty">Especialidade</label>
                 <input
                   type="text"
                   id="specialty"
@@ -82,7 +82,7 @@ export default function ReadAppointment() {
                 />
               </div>
               <div className="form-group">
-                <label className="form-label" htmlFor="comments">Comments</label>
+                <label className="form-label" htmlFor="comments">Comentários</label>
                 <input
                   type="text"
                   id="comments"
@@ -93,7 +93,7 @@ export default function ReadAppointment() {
                 />
               </div>
               <div className="form-group">
-                <label className="form-label" htmlFor="date">Date</label>
+                <label className="form-label" htmlFor="date">Data</label>
                 <input
                   type="date"
                   id="date"
@@ -104,7 +104,7 @@ export default function ReadAppointment() {
                 />
               </div>
               <div className="form-group">
-                <label className="form-label" htmlFor="student">Student</label>
+                <label className="form-label" htmlFor="student">Estudante</label>
                 <input
                   type="text"
                   id="student"
@@ -115,7 +115,7 @@ export default function ReadAppointment() {
                 />
               </div>
               <div className="form-group">
-                <label className="form-label" htmlFor="professional">Professional</label>
+                <label className="form-label" htmlFor="professional">Profissional</label>
                 <input
                   type="text"
                   id="professional"
@@ -138,22 +138,22 @@ export default function ReadAppointment() {
   );
 }
 
-// Adicionando a verificação de sessão no getServerSideProps
+
 export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req });
 
-  // Verifica se o usuário está logado, caso contrário, redireciona
+
   if (!session) {
     return {
       redirect: {
-        destination: '/login',  // Redireciona para a página de login
+        destination: '/login', 
         permanent: false,
       },
     };
   }
 
-  // Retorna os dados da página, caso o usuário esteja logado
+
   return {
-    props: { session }, // Passa a sessão como prop
+    props: { session }, 
   };
 }

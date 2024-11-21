@@ -41,7 +41,6 @@ export default function Students() {
       try {
         await Axios.delete(`${API_URL}/${id}`);
         alert("Compromisso deletado com sucesso!");
-        // Remove o usuário deletado da lista exibida
         setStudent(student.filter((student) => student._id !== id));
         setFilteredStudents(filteredstudents.filter((student) => student._id !== id));
       } catch (error) {
@@ -69,7 +68,7 @@ export default function Students() {
           <div className="row border-bottom">
             <h3>Lista de estudantes</h3>
 
-            {/* Campo de busca e botão de criar compromisso */}
+
             <div className="d-flex justify-content-between align-items-center mb-3">
               <input
                 type="text"
@@ -83,7 +82,7 @@ export default function Students() {
               </Link>
             </div>
 
-            {/* Tabela de Usuários */}
+
             <table className="table table-hover table-dark">
               <thead>
                 <tr>
@@ -138,23 +137,23 @@ export default function Students() {
   )
 }
 
-// Adicionando a verificação de sessão no getServerSideProps
+
 export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req });
 
-  // Verifica se o usuário está logado, caso contrário, redireciona
+
   if (!session) {
     return {
       redirect: {
-        destination: '/login',  // Redireciona para a página de login
+        destination: '/login', 
         permanent: false,
       },
     };
   }
 
-  // Retorna os dados da página, caso o usuário esteja logado
+  
   return {
-    props: { session }, // Passa a sessão como prop
+    props: { session }, 
   };
 }
 

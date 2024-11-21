@@ -10,8 +10,8 @@ export default function AppointmentsAction({ pid }) {
         await Axios.delete(API_URL);
         alert("Compromisso deletado com sucesso!");
 
-        // Opcional: Atualiza a página ou dispara um evento para o componente pai
-        window.location.reload(); // Recarrega a página
+
+        window.location.reload(); 
       } catch (error) {
         console.error("Erro ao deletar o compromisso:", error);
         alert("Erro ao deletar o compromisso. Tente novamente.");
