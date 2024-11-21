@@ -1,4 +1,4 @@
-import { getSession } from 'next-auth/react';
+import Axios from 'axios';  // Certifique-se de importar Axios
 import NavAdmin from '@/components/NavAdmin';
 import MenuAdmin from '@/components/MenuAdmin';
 import Head from 'next/head';
@@ -24,8 +24,8 @@ export default function UpdateStudent() {
   const [message, setMessage] = useState({ message: "", status: "" });
 
   const optionsStatus = [
-    { value: 'on', text: 'Ativo' },
-    { value: 'off', text: 'Inativo' },
+    { value: 'true', text: 'Ativo' },
+    { value: 'false', text: 'Inativo' },
   ];
 
   useEffect(() => {
@@ -78,82 +78,80 @@ export default function UpdateStudent() {
       <div>
         <NavAdmin />
         <MenuAdmin />
-
       </div>
 
       <div className="d-flex justify-content-center p-2">
         <div className="container">
           <div className="row border-bottom">
-          {
-          message.status === "" ? "" :
-          message.status === "ok" ? 
-          <div className='alert alert-success' role='alert'> { message.message } <Link className='alert-link' href='/admin/students'>Voltar</Link></div> :
-          <div className='alert alert-danger' role='alert'> { message.message } <Link className='alert-link' href='/admin/students'>Voltar</Link></div>
-        }
+            { 
+              message.status === "" ? "" : 
+              message.status === "ok" ? <div className='alert alert-success' role='alert'> { message.message } <Link className='alert-link' href='/admin/students'>Voltar</Link></div> : 
+              <div className='alert alert-danger' role='alert'> { message.message } <Link className='alert-link' href='/admin/students'>Voltar</Link></div>
+            }
             <h3>Edição de Estudante</h3>
             <form>
               <div className="form-group">
                 <label className="form-label" htmlFor="name">Nome</label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  className="form-control"
-                  value={student.name}
-                  onChange={handleChange}
+                <input 
+                  type="text" 
+                  id="name" 
+                  name="name" 
+                  className="form-control" 
+                  value={student.name} 
+                  onChange={handleChange} 
                 />
               </div>
               <div className="form-group">
                 <label className="form-label" htmlFor="age">Idade</label>
-                <input
-                  type="number"
-                  id="age"
-                  name="age"
-                  className="form-control"
-                  value={student.age}
-                  onChange={handleChange}
+                <input 
+                  type="number" 
+                  id="age" 
+                  name="age" 
+                  className="form-control" 
+                  value={student.age} 
+                  onChange={handleChange} 
                 />
               </div>
               <div className="form-group">
                 <label className="form-label" htmlFor="parents">Responsáveis</label>
-                <input
-                  type="text"
-                  id="parents"
-                  name="parents"
-                  className="form-control"
-                  value={student.parents}
-                  onChange={handleChange}
+                <input 
+                  type="text" 
+                  id="parents" 
+                  name="parents" 
+                  className="form-control" 
+                  value={student.parents} 
+                  onChange={handleChange} 
                 />
               </div>
               <div className="form-group">
                 <label className="form-label" htmlFor="phone">Telefone</label>
-                <input
-                  type="text"
-                  id="phone"
-                  name="phone"
-                  className="form-control"
-                  value={student.phone}
-                  onChange={handleChange}
+                <input 
+                  type="text" 
+                  id="phone" 
+                  name="phone" 
+                  className="form-control" 
+                  value={student.phone} 
+                  onChange={handleChange} 
                 />
               </div>
               <div className="form-group">
-                <label className="form-label" htmlFor="special">Necessidades Especiais</label>
-                <input
-                  type="text"
-                  id="special"
-                  name="special"
-                  className="form-control"
-                  value={student.special}
-                  onChange={handleChange}
+                <label className="form-label" htmlFor="special">Especialidade</label>
+                <input 
+                  type="text" 
+                  id="special" 
+                  name="special" 
+                  className="form-control" 
+                  value={student.special} 
+                  onChange={handleChange} 
                 />
               </div>
               <div className="form-group">
                 <label className="form-label" htmlFor="status">Status</label>
-                <select
-                  id="status"
-                  name="status"
-                  className="form-select"
-                  value={student.status}
+                <select 
+                  className="form-select" 
+                  id="status" 
+                  name="status" 
+                  value={student.status} 
                   onChange={handleChange}
                 >
                   {optionsStatus.map(option => (
@@ -170,27 +168,7 @@ export default function UpdateStudent() {
             </form>
           </div>
         </div>
-      </div>  
-  </>
-  )
-}
-
-
-export async function getServerSideProps(context) {
-  const session = await getSession({ req: context.req });
-
-  
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/login',  
-        permanent: false,
-      },
-    };
-  }
-
- 
-  return {
-    props: { session }, 
-  };
+      </div>
+    </>
+  );
 }

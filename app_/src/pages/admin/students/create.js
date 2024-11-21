@@ -21,7 +21,6 @@ export default function CreateStudents() {
   const [message, setMessage] = useState({ message: "", status: "" });
 
   const optionsStatus = [
-    { value: '', text: '-- Selecione um estado --' },
     { value: 'true', text: 'Ativo' },
     { value: 'false', text: 'Inativo' },
   ];

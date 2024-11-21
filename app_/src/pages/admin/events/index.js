@@ -88,7 +88,6 @@ export default function Events() {
                 <tr>
                   <th scope="col">#</th>
                   <th scope="col">Descrição</th>
-                  <th scope="col">Comentário</th>
                   <th scope="col">Data</th>
                   <th scope="col">Ação</th>
                 </tr>
@@ -98,7 +97,6 @@ export default function Events() {
                   <tr key={event._id}>
                     <th scope="row">{event._id}</th>
                     <td className="text-truncate">{event.description}</td>
-                    <td className="text-truncate">{event.comments}</td>
                     <td className="text-truncate">{event.date}</td>
                     <td>
                       <a

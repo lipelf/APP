@@ -109,10 +109,11 @@ router.put('/:id', async (req, res) => {
         const updateData = { name, age, parents, phone, special, status };
 
         const updatedStudent = await Student.findByIdAndUpdate(
-            req.params.id, // Atualizando pelo _id do MongoDB
-            updateData,
+            req.params.id, 
+            updateData,     
             { new: true, runValidators: true }
         );
+        
 
         if (!updatedStudent) {
             return res.status(404).json({ erro: 'Estudante não encontrado' });

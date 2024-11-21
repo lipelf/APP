@@ -66,7 +66,7 @@ export default function Students() {
       <div className="d-flex justify-content-center p-2">
         <div className="container">
           <div className="row border-bottom">
-            <h3>Lista de estudantes</h3>
+            <h3>Lista de Estudantes</h3>
 
 
             <div className="d-flex justify-content-between align-items-center mb-3">
