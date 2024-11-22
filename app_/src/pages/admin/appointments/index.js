@@ -58,7 +58,7 @@ export default function Appointments() {
             <div className="d-flex justify-content-between align-items-center mb-3">
               <input
                 type="text"
-                placeholder="Buscar por paciente ou data..."
+                placeholder="Buscar por estudante ou data..."
                 className="form-control w-50"
                 value={search}
                 onChange={handleSearch}
