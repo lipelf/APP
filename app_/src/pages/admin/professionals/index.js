@@ -30,9 +30,13 @@ export default function Professional() {
   const handleSearch = (e) => {
     const term = e.target.value.toLowerCase();
     setSearch(term);
-    const filtered = professional.filter((professional) => professional._id.toLowerCase().includes(term));
+    const filtered = professional.filter(
+      (professional) =>
+        professional?.name?.toLowerCase().includes(term) || professional?.specialty?.toLowerCase().includes(term)// Verifica se `name` existe
+    );
     setFilteredProfessional(filtered);
   };
+  
 
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm("Tem certeza de que deseja deletar este compromisso?");
@@ -70,7 +74,7 @@ export default function Professional() {
             <div className="d-flex justify-content-between align-items-center mb-3">
               <input
                 type="text"
-                placeholder="Buscar por id..."
+                placeholder="Buscar por nome ou especialidade..."
                 className="form-control w-50"
                 value={search}
                 onChange={handleSearch}

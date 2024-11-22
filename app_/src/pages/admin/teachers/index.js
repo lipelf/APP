@@ -32,7 +32,7 @@ export default function Teachers() {
     const term = e.target.value.toLowerCase();
     setSearch(term);
     const filtered = teacher.filter((teacher) => 
-      teacher.name.toLowerCase().includes(term) 
+      teacher.name.toLowerCase().includes(term) || teacher.school_disciplines.toLowerCase().includes(term)
     );
     setFilteredTeachers(filtered);
   };
@@ -58,7 +58,7 @@ export default function Teachers() {
             <div className="d-flex justify-content-between align-items-center mb-3">
               <input
                 type="text"
-                placeholder="Buscar por nome ou data..."
+                placeholder="Buscar por nome ou discplina..."
                 className="form-control w-50"
                 value={search}
                 onChange={handleSearch}
